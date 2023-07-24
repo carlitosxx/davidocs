@@ -18,7 +18,7 @@ class SigninDataSourceImpl implements ISigninDataSource {
   DataOrFailure getLogin(String user, String password) async {
     try {
       String url = "${Environment.apiUrl}subscription_key";
-      Map<String, dynamic> data = {"email": user, "password": password};
+      Map<String, dynamic> data = {"Username": user, "Password": password};
       final response = await dio.post(url, data: data);
       if (response.statusCode == 200) {
         if (response.data['error']) {
