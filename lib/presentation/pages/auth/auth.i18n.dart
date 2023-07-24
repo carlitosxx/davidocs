@@ -4,6 +4,8 @@ const kBrand = 'kBrand';
 const kHintUser = 'kHintUser';
 const kHintPassword = 'kHintPassword';
 const kSignIn = 'kSignIn';
+const kRemember = 'kRemember';
+const kFieldRequired = 'kFieldRequired';
 
 extension SplashStrings on String {
   static const _t = Translations.from("en_us", {
@@ -22,6 +24,14 @@ extension SplashStrings on String {
     kSignIn: {
       "en_us": "Sign in",
       "es_es": "Iniciar Sesion",
+    },
+    kRemember: {
+      "en_us": "Remember",
+      "es_es": "Recordar",
+    },
+    kFieldRequired: {
+      "en_us": "The field is required",
+      "es_es": "El campo es requerido",
     }
   });
 

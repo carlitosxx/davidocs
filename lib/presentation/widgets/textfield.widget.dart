@@ -10,6 +10,8 @@ class TextfieldWidget extends StatefulWidget {
     this.hasIcon,
     this.isPhone,
     this.icon,
+    this.maxLength,
+    this.onChanged,
     super.key,
   });
 
@@ -20,7 +22,8 @@ class TextfieldWidget extends StatefulWidget {
   final bool? hasIcon;
   final bool? isPhone;
   final IconData? icon;
-
+  final int? maxLength;
+  final Function(String)? onChanged;
   @override
   State<TextfieldWidget> createState() => _TextfieldWidgetState();
 }
@@ -67,31 +70,26 @@ class _TextfieldWidgetState extends State<TextfieldWidget> {
               ),
             ),
           ),
-          Visibility(
-            visible: widget.isPhone ?? false,
-            child: Positioned(
-              right: 14,
-              top: 0,
-              child: DropdownButton(
-                underline: const SizedBox.shrink(),
-                value: 'pe',
-                icon: const SizedBox.shrink(),
-                onChanged: (value) {},
-                items: [
-                  DropdownMenuItem(
-                    value: 'pe',
-                    child: SvgPicture.asset('assets/svg/countries/pe.svg',
-                        alignment: Alignment.centerRight, width: 30),
-                  ),
-                  // DropdownMenuItem(
-                  //   value: 'ar',
-                  //   child: SvgPicture.asset('assets/svg/countries/ar.svg',
-                  //       alignment: Alignment.centerRight, width: 30),
-                  // ),
-                ],
-              ),
-            ),
-          ),
+          // Visibility(
+          //   visible: widget.isPhone ?? false,
+          //   child: Positioned(
+          //     right: 14,
+          //     top: 0,
+          //     child: DropdownButton(
+          //       underline: const SizedBox.shrink(),
+          //       value: 'pe',
+          //       icon: const SizedBox.shrink(),
+          //       onChanged: (value) {},
+          //       items: [
+          //         DropdownMenuItem(
+          //           value: 'pe',
+          //           child: SvgPicture.asset('assets/svg/countries/pe.svg',
+          //               alignment: Alignment.centerRight, width: 30),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 50),
             child: TextField(
@@ -99,9 +97,10 @@ class _TextfieldWidgetState extends State<TextfieldWidget> {
                   TextStyle(color: Theme.of(context).colorScheme.onBackground),
               controller: widget.controller,
               obscureText: !isOpen,
-              maxLength: 50,
+              maxLength: widget.maxLength ?? 15,
               keyboardType: widget.inputType,
               textAlign: TextAlign.start,
+              onChanged: widget.onChanged,
               decoration: InputDecoration(
                 counterText: '',
                 border: InputBorder.none,
