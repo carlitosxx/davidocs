@@ -20,15 +20,16 @@ class SigninDataSourceImpl implements ISigninDataSource {
       String url = "${Environment.apiUrl}subscription_key";
       Map<String, dynamic> data = {"Username": user, "Password": password};
       final response = await dio.post(url, data: data);
+
       if (response.statusCode == 200) {
-        if (response.data['error']) {
-          final badRequestModel = BadRequestModel.fromJson(response.data);
-          return Either.left(HttpRequestFailure.badRequest(badRequestModel));
-        } else {
+        if (response.data['error'] == null) {
           final login = ResponseSigninModel.fromJson(response.data);
           return Either.right(
             login,
           );
+        } else {
+          final badRequestModel = BadRequestModel.fromJson(response.data);
+          return Either.left(HttpRequestFailure.badRequest(badRequestModel));
         }
       } else {
         return Either.left(

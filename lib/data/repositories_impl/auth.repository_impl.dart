@@ -6,10 +6,15 @@ import 'package:davidocs/domain/entities/response_signin.entity.dart';
 import 'package:davidocs/domain/repositories/auth/auth.repository.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-class AuthRepositoryImpl implements AuthRepository {
+class AuthRepositoryImpl implements IAuthRepository {
   final ISigninDataSource _iSigninDataSource;
   final ITokenDataSource _iTokenDataSource;
-  AuthRepositoryImpl(this._iSigninDataSource, this._iTokenDataSource);
+  AuthRepositoryImpl(
+      {required ISigninDataSource iSigninDataSource,
+      required ITokenDataSource iTokenDataSource})
+      : _iSigninDataSource = iSigninDataSource,
+        _iTokenDataSource = iTokenDataSource;
+
   @override
   DataOrFailure getSignin(String user, String password) async {
     final connectivityResult = await (Connectivity().checkConnectivity());
@@ -20,8 +25,8 @@ class AuthRepositoryImpl implements AuthRepository {
       Either<HttpRequestFailure, ResponseSigninEntity> dataOrFailure =
           await dataOrFailureFuture;
       dataOrFailure.whenOrNull(
-        right: (value) {
-          _iTokenDataSource.saveToken(value.subscriptionKey);
+        right: (value) async {
+          await _iTokenDataSource.saveToken(value.subscriptionKey);
         },
       );
       return dataOrFailureFuture;

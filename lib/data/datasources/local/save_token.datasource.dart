@@ -5,11 +5,12 @@ abstract class ITokenDataSource {
 }
 
 class TokenDataSourceImpl implements ITokenDataSource {
-  final SharedPreferences sharedPreferences;
+  final Future<SharedPreferences> sharedPreferences;
   TokenDataSourceImpl(this.sharedPreferences);
 
   @override
-  saveToken(String token) {
-    sharedPreferences.setString('token', token);
+  saveToken(String token) async {
+    final prefs = await sharedPreferences;
+    await prefs.setString('token', token);
   }
 }

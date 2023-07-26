@@ -1,6 +1,8 @@
 import 'package:davidocs/presentation/pages/auth/auth.i18n.dart';
+import 'package:davidocs/presentation/pages/auth/providers/get_signin/get_signin_provider.dart';
 import 'package:davidocs/presentation/pages/auth/providers/remember.provider.dart';
 import 'package:davidocs/presentation/pages/auth/providers/validation.provider.dart';
+import 'package:davidocs/presentation/routes/routes.dart';
 import 'package:davidocs/presentation/widgets/button.widget.dart';
 import 'package:davidocs/presentation/widgets/clipper_top_login.widget.dart';
 import 'package:davidocs/presentation/widgets/textfield.widget.dart';
@@ -31,6 +33,25 @@ class AuthPhoneviewState extends ConsumerState<AuthPhoneview> {
     final isVisivilityValidationUser = ref.watch(visibilityValidationUser);
     final isVisibilityValidationPassword =
         ref.watch(visibilityValidationPassword);
+    final state = ref.watch(signinNotifierProvider);
+    ref.listen(
+      signinNotifierProvider.select((value) => value),
+      ((previous, next) {
+        //show Snackbar on failure
+
+        next.whenOrNull(
+          error: (message) => ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(message ?? 'error'))),
+          data: (responseSigninEntity) =>
+              ref.read(appRouterProvider).goNamed('home'),
+        );
+
+        // } else if (next is Success) {
+        //   AutoRouter.of(context)
+        //       .pushAndPopUntil(const DashboardRoute(), predicate: (_) => false);
+        // }
+      }),
+    );
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
@@ -169,16 +190,57 @@ class AuthPhoneviewState extends ConsumerState<AuthPhoneview> {
         bottomNavigationBar: Container(
           padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
           child: SizedBox(
-            width: double.infinity,
-            child: ButtonWidget(
+              // width: double.infinity,
+              child: state.maybeMap(
+            orElse: () => ButtonWidget(
               text: kSignIn.i18n,
               isPrimary: true,
               onButtonClick: (isVisibilityValidationPassword == true ||
                       isVisivilityValidationUser == true)
                   ? null
-                  : () {},
+                  : () {
+                      ref
+                          .read(signinNotifierProvider.notifier)
+                          .getSignin('41521195', "415211952023");
+                    },
             ),
-          ),
+            loading: (value) => ElevatedButton(
+              onPressed: null,
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                elevation: 0,
+                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: Text(
+                '...',
+              ),
+            ),
+            // loading: () => ElevatedButton(
+            //   onPressed: null,
+            //   style: TextButton.styleFrom(
+            //     padding: const EdgeInsets.symmetric(vertical: 15),
+            //     elevation: 0,
+            //     backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+            //     shape: RoundedRectangleBorder(
+            //       borderRadius: BorderRadius.circular(10),
+            //     ),
+            //   ),
+            //   child: CircularProgressIndicator(),
+            // ),
+            // error: (message) => Text(message ?? 'error'),
+          )
+              // ButtonWidget(
+              //   text: kSignIn.i18n,
+              //   isPrimary: true,
+              //   onButtonClick: (isVisibilityValidationPassword == true ||
+              //           isVisivilityValidationUser == true)
+              //       ? null
+              //       : () {},
+              // ),
+              ),
         ),
       ),
     );

@@ -3,9 +3,9 @@ import 'package:davidocs/domain/repositories/auth/auth.repository.dart';
 class GetSigninUC {
   GetSigninUC(this.authRepository);
 
-  final AuthRepository authRepository;
+  final IAuthRepository authRepository;
 
-  DataOrFailure call(String user, String password) async {
+  DataOrFailure call({required String user, required String password}) async {
     return authRepository.getSignin(user, password);
   }
 }
