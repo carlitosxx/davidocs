@@ -8,6 +8,7 @@ import 'package:davidocs/presentation/widgets/clipper_top_login.widget.dart';
 import 'package:davidocs/presentation/widgets/textfield.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class AuthPhoneview extends ConsumerStatefulWidget {
   const AuthPhoneview({super.key});
@@ -38,20 +39,18 @@ class AuthPhoneviewState extends ConsumerState<AuthPhoneview> {
       signinNotifierProvider.select((value) => value),
       ((previous, next) {
         //show Snackbar on failure
-
         next.whenOrNull(
-          error: (message) => ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(message ?? 'error'))),
+          error: (message) =>
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(message ?? 'Error desconocido'),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+          )),
           data: (responseSigninEntity) =>
-              ref.read(appRouterProvider).goNamed('home'),
+              ref.read(appRouterProvider).pushNamed('home'),
         );
-
-        // } else if (next is Success) {
-        //   AutoRouter.of(context)
-        //       .pushAndPopUntil(const DashboardRoute(), predicate: (_) => false);
-        // }
       }),
     );
+
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
@@ -201,46 +200,24 @@ class AuthPhoneviewState extends ConsumerState<AuthPhoneview> {
                   : () {
                       ref
                           .read(signinNotifierProvider.notifier)
-                          .getSignin('41521195', "415211952023");
+                          .getSignin(user.text, password.text);
+                      // '41521195', "415211952023"
                     },
             ),
             loading: (value) => ElevatedButton(
               onPressed: null,
               style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 15),
+                padding: const EdgeInsets.symmetric(vertical: 7),
                 elevation: 0,
                 backgroundColor: Theme.of(context).colorScheme.primaryContainer,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: Text(
-                '...',
-              ),
+              child: LoadingAnimationWidget.prograssiveDots(
+                  color: Theme.of(context).colorScheme.primary, size: 36),
             ),
-            // loading: () => ElevatedButton(
-            //   onPressed: null,
-            //   style: TextButton.styleFrom(
-            //     padding: const EdgeInsets.symmetric(vertical: 15),
-            //     elevation: 0,
-            //     backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-            //     shape: RoundedRectangleBorder(
-            //       borderRadius: BorderRadius.circular(10),
-            //     ),
-            //   ),
-            //   child: CircularProgressIndicator(),
-            // ),
-            // error: (message) => Text(message ?? 'error'),
-          )
-              // ButtonWidget(
-              //   text: kSignIn.i18n,
-              //   isPrimary: true,
-              //   onButtonClick: (isVisibilityValidationPassword == true ||
-              //           isVisivilityValidationUser == true)
-              //       ? null
-              //       : () {},
-              // ),
-              ),
+          )),
         ),
       ),
     );
