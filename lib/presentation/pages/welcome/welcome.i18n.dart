@@ -1,37 +1,37 @@
 import 'package:i18n_extension/i18n_extension.dart';
 
-const kBrand = 'kBrand';
-const kHintUser = 'kHintUser';
-const kHintPassword = 'kHintPassword';
-const kSignIn = 'kSignIn';
-const kRemember = 'kRemember';
-const kFieldRequired = 'kFieldRequired';
+const kWelcome = 'kBrand';
+const kNext = 'kNext';
+const kFullname = 'kFullname';
+const kDNI = 'kDNI';
+const kEmail = 'kEmail';
+const kPhone = 'kPhone';
 
-extension AuthStrings on String {
+extension WelcomeStrings on String {
   static const _t = Translations.from("en_us", {
-    kBrand: {
-      "en_us": "Davidocs",
-      "es_es": "Davidocs",
+    kWelcome: {
+      "en_us": "Welcome",
+      "es_es": "Bienvenido",
     },
-    kHintUser: {
-      "en_us": "User",
-      "es_es": "Usuario",
+    kNext: {
+      "en_us": "Next",
+      "es_es": "Siguiente",
     },
-    kHintPassword: {
-      "en_us": "Password",
-      "es_es": "Contraseña",
+    kFullname: {
+      "en_us": "Fullname",
+      "es_es": "Nombre completo",
     },
-    kSignIn: {
-      "en_us": "Sign in",
-      "es_es": "Iniciar Sesion",
+    kDNI: {
+      "en_us": "DNI",
+      "es_es": "DNI",
     },
-    kRemember: {
-      "en_us": "Remember",
-      "es_es": "Recordar",
+    kEmail: {
+      "en_us": "Email",
+      "es_es": "Correo",
     },
-    kFieldRequired: {
-      "en_us": "The field is required",
-      "es_es": "El campo es requerido",
+    kPhone: {
+      "en_us": "Phone",
+      "es_es": "Telefono",
     }
   });
 

@@ -29,7 +29,7 @@ class ClipperTopLogin extends StatelessWidget {
       clipper: _ClipperTopPath(),
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.primary,
+          color: Theme.of(context).colorScheme.primaryContainer,
         ),
         height: MediaQuery.of(context).size.height / 2.5,
       ),

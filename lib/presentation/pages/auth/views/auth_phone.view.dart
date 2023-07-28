@@ -38,15 +38,16 @@ class AuthPhoneviewState extends ConsumerState<AuthPhoneview> {
     ref.listen(
       signinNotifierProvider.select((value) => value),
       ((previous, next) {
-        //show Snackbar on failure
         next.whenOrNull(
+          //show Snackbar
           error: (message) =>
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(message ?? 'Error desconocido'),
             backgroundColor: Theme.of(context).colorScheme.primary,
           )),
+          //move to welcomePage
           data: (responseSigninEntity) =>
-              ref.read(appRouterProvider).pushNamed('home'),
+              ref.read(appRouterProvider).pushNamed('welcome'),
         );
       }),
     );
@@ -189,7 +190,6 @@ class AuthPhoneviewState extends ConsumerState<AuthPhoneview> {
         bottomNavigationBar: Container(
           padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
           child: SizedBox(
-              // width: double.infinity,
               child: state.maybeMap(
             orElse: () => ButtonWidget(
               text: kSignIn.i18n,
