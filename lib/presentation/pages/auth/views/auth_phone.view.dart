@@ -21,6 +21,7 @@ class AuthPhoneviewState extends ConsumerState<AuthPhoneview> {
   //Controllers
   final user = TextEditingController();
   final password = TextEditingController();
+
   @override
   void dispose() {
     user.dispose();
@@ -40,11 +41,11 @@ class AuthPhoneviewState extends ConsumerState<AuthPhoneview> {
       ((previous, next) {
         next.whenOrNull(
           //show Snackbar
-          error: (message) =>
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(message ?? 'Error desconocido'),
-            backgroundColor: Theme.of(context).colorScheme.primary,
-          )),
+          // error: (message) =>
+          //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          //   content: Text(message ?? 'Error desconocido'),
+          //   backgroundColor: Theme.of(context).colorScheme.primary,
+          // )),
           //move to welcomePage
           data: (responseSigninEntity) =>
               ref.read(appRouterProvider).pushNamed('welcome'),
@@ -181,43 +182,67 @@ class AuthPhoneviewState extends ConsumerState<AuthPhoneview> {
                       "assets/images/poweredbyv3.png",
                       height: 50,
                     ),
+                    state.maybeWhen(
+                      orElse: () => const SizedBox.shrink(),
+                      error: (message) {
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 14),
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.error,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Text(
+                            message ?? 'Error desconocido',
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.onPrimary),
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
             )
           ],
         ),
-        bottomNavigationBar: Container(
-          padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-          child: SizedBox(
-              child: state.maybeMap(
-            orElse: () => ButtonWidget(
-              text: kSignIn.i18n,
-              isPrimary: true,
-              onButtonClick: (isVisibilityValidationPassword == true ||
-                      isVisivilityValidationUser == true)
-                  ? null
-                  : () {
-                      ref
-                          .read(signinNotifierProvider.notifier)
-                          .getSignin(user.text, password.text);
-                      // '41521195', "415211952023"
-                    },
-            ),
-            loading: (value) => ElevatedButton(
-              onPressed: null,
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 7),
-                elevation: 0,
-                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+        bottomNavigationBar: Stack(
+          children: [
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+              child: SizedBox(
+                  child: state.maybeMap(
+                orElse: () => ButtonWidget(
+                  text: kSignIn.i18n,
+                  isPrimary: true,
+                  onButtonClick: (isVisibilityValidationPassword == true ||
+                          isVisivilityValidationUser == true)
+                      ? null
+                      : () {
+                          ref
+                              .read(signinNotifierProvider.notifier)
+                              .getSignin(user.text, password.text);
+                          // '41521195', "415211952023"
+                        },
                 ),
-              ),
-              child: LoadingAnimationWidget.prograssiveDots(
-                  color: Theme.of(context).colorScheme.primary, size: 36),
+                loading: (value) => ElevatedButton(
+                  onPressed: null,
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 7),
+                    elevation: 0,
+                    backgroundColor:
+                        Theme.of(context).colorScheme.primaryContainer,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: LoadingAnimationWidget.prograssiveDots(
+                      color: Theme.of(context).colorScheme.primary, size: 36),
+                ),
+              )),
             ),
-          )),
+          ],
         ),
       ),
     );

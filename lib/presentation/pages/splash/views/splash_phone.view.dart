@@ -10,7 +10,7 @@ class SplashPhoneView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       // appBar: AppBar(),
       body: Center(
         child: Column(

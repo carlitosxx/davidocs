@@ -1,3 +1,4 @@
+import 'package:davidocs/presentation/pages/home/widgets/my_drawer.dart';
 import 'package:flutter/material.dart';
 
 class HomePhoneView extends StatelessWidget {
@@ -5,6 +6,12 @@ class HomePhoneView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Inicio'),
+        // leading: IconButton(onPressed: () {}, icon: Icon(Icons.menu)),
+      ),
+      drawer: const MyDrawer(),
+    );
   }
 }

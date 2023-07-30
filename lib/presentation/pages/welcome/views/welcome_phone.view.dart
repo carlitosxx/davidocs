@@ -1,5 +1,6 @@
 import 'package:davidocs/presentation/pages/auth/providers/get_signin/get_signin_provider.dart';
 import 'package:davidocs/presentation/pages/welcome/welcome.i18n.dart';
+import 'package:davidocs/presentation/routes/routes.dart';
 import 'package:davidocs/presentation/widgets/button.widget.dart';
 import 'package:davidocs/presentation/widgets/clipper_top_login.widget.dart';
 import 'package:davidocs/presentation/widgets/spacing_height_small.widget.dart';
@@ -99,10 +100,13 @@ class WelcomePhoneView extends ConsumerWidget {
       ),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+        width: double.infinity,
         child: ButtonWidget(
           text: kNext.i18n,
           isPrimary: true,
-          onButtonClick: () {},
+          onButtonClick: () {
+            ref.read(appRouterProvider).goNamed('home');
+          },
         ),
       ),
     );
