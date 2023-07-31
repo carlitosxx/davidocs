@@ -1,5 +1,6 @@
 import 'package:davidocs/presentation/pages/auth/auth.page.dart';
 import 'package:davidocs/presentation/pages/home/home.page.dart';
+import 'package:davidocs/presentation/pages/pending_documents/pending_documents.page.dart';
 import 'package:davidocs/presentation/pages/splash/splash.page.dart';
 import 'package:davidocs/presentation/pages/welcome/welcome.page.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         ),
         child: I18n(child: const WelcomePage()),
       ),
+    ),
+    GoRoute(
+      name: 'pending_documents',
+      path: '/pending_documents',
+      builder: (context, state) => I18n(child: const PendingDocumentsPage()),
     ),
   ]);
 });

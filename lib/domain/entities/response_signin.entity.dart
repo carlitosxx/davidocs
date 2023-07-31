@@ -1,6 +1,7 @@
 class ResponseSigninEntity {
   String subscriptionKey;
   int expiresIn;
+  String? token;
   String documento;
   String nombre;
   String correo;
@@ -12,6 +13,7 @@ class ResponseSigninEntity {
   ResponseSigninEntity({
     required this.subscriptionKey,
     required this.expiresIn,
+    this.token,
     required this.documento,
     required this.nombre,
     required this.correo,

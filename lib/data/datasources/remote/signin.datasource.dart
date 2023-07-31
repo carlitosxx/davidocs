@@ -17,16 +17,26 @@ class SigninDataSourceImpl implements ISigninDataSource {
   @override
   DataOrFailure getLogin(String user, String password) async {
     try {
-      String url = "${Environment.apiUrl}subscription_key";
+      String urlSubscriptionKey = "${Environment.apiUrl}subscription_key";
+      String urlAccesToken = "${Environment.apiUrl}access_token";
       Map<String, dynamic> data = {"Username": user, "Password": password};
-      final response = await dio.post(url, data: data);
-
+      final response = await dio.post(urlSubscriptionKey, data: data);
       if (response.statusCode == 200) {
         if (response.data['error'] == null) {
           final login = ResponseSigninModel.fromJson(response.data);
-          return Either.right(
-            login,
-          );
+          final header = Options(
+              headers: {"Jcdf-Apib-Subscription-Key": login.subscriptionKey});
+          final responseAccessToken =
+              await dio.post(urlAccesToken, options: header);
+          if (responseAccessToken.data['error'] == null) {
+            login.token = responseAccessToken.data["access_token"];
+            return Either.right(
+              login,
+            );
+          } else {
+            final badRequestModel = BadRequestModel.fromJson(response.data);
+            return Either.left(HttpRequestFailure.badRequest(badRequestModel));
+          }
         } else {
           final badRequestModel = BadRequestModel.fromJson(response.data);
           return Either.left(HttpRequestFailure.badRequest(badRequestModel));

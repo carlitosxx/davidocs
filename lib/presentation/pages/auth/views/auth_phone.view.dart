@@ -40,13 +40,6 @@ class AuthPhoneviewState extends ConsumerState<AuthPhoneview> {
       signinNotifierProvider.select((value) => value),
       ((previous, next) {
         next.whenOrNull(
-          //show Snackbar
-          // error: (message) =>
-          //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          //   content: Text(message ?? 'Error desconocido'),
-          //   backgroundColor: Theme.of(context).colorScheme.primary,
-          // )),
-          //move to welcomePage
           data: (responseSigninEntity) =>
               ref.read(appRouterProvider).pushNamed('welcome'),
         );

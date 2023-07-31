@@ -1,5 +1,6 @@
 // import 'package:davicloud/core/l10n/l10n.dart';
 import 'package:davidocs/presentation/pages/auth/providers/get_signin/get_signin_provider.dart';
+import 'package:davidocs/presentation/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -74,7 +75,9 @@ class MyDrawer extends ConsumerWidget {
             child: Column(
               children: [
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    ref.read(appRouterProvider).goNamed('home');
+                  },
                   child: Padding(
                     padding: const EdgeInsets.only(left: 16, bottom: 20),
                     child: Row(
@@ -93,7 +96,9 @@ class MyDrawer extends ConsumerWidget {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    ref.read(appRouterProvider).goNamed('pending_documents');
+                  },
                   child: Padding(
                     padding: const EdgeInsets.only(left: 16, bottom: 20),
                     child: Row(

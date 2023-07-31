@@ -15,8 +15,11 @@ String responseSigninModelToJson(ResponseSigninModel data) =>
 class ResponseSigninModel implements ResponseSigninEntity {
   @override
   String subscriptionKey;
+
   @override
   int expiresIn;
+  @override
+  String? token;
   @override
   String documento;
   @override
@@ -35,6 +38,7 @@ class ResponseSigninModel implements ResponseSigninEntity {
   ResponseSigninModel({
     required this.subscriptionKey,
     required this.expiresIn,
+    this.token,
     required this.documento,
     required this.nombre,
     required this.correo,
@@ -47,6 +51,7 @@ class ResponseSigninModel implements ResponseSigninEntity {
   ResponseSigninModel copyWith({
     String? subscriptionKey,
     int? expiresIn,
+    String? token,
     String? documento,
     String? nombre,
     String? correo,
@@ -58,6 +63,7 @@ class ResponseSigninModel implements ResponseSigninEntity {
       ResponseSigninModel(
         subscriptionKey: subscriptionKey ?? this.subscriptionKey,
         expiresIn: expiresIn ?? this.expiresIn,
+        token: token ?? this.token,
         documento: documento ?? this.documento,
         nombre: nombre ?? this.nombre,
         correo: correo ?? this.correo,
@@ -71,6 +77,7 @@ class ResponseSigninModel implements ResponseSigninEntity {
       ResponseSigninModel(
         subscriptionKey: json["subscription_key"],
         expiresIn: json["expires_in"],
+        token: json["token"],
         documento: json["documento"],
         nombre: json["nombre"],
         correo: json["correo"],
@@ -83,6 +90,7 @@ class ResponseSigninModel implements ResponseSigninEntity {
   Map<String, dynamic> toJson() => {
         "subscription_key": subscriptionKey,
         "expires_in": expiresIn,
+        "token": token,
         "documento": documento,
         "nombre": nombre,
         "correo": correo,
