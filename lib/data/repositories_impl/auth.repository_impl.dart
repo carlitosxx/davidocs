@@ -26,7 +26,8 @@ class AuthRepositoryImpl implements IAuthRepository {
           await dataOrFailureFuture;
       dataOrFailure.whenOrNull(
         right: (value) async {
-          await _iTokenDataSource.saveToken(value.subscriptionKey);
+          await _iTokenDataSource.saveTokenAndSubscriptionKey(
+              value.token ?? '', value.subscriptionKey);
         },
       );
       return dataOrFailureFuture;

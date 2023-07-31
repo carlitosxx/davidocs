@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class ITokenDataSource {
-  saveToken(String token);
+  saveTokenAndSubscriptionKey(String token, String subscriptionKey);
 }
 
 class TokenDataSourceImpl implements ITokenDataSource {
@@ -9,8 +9,9 @@ class TokenDataSourceImpl implements ITokenDataSource {
   TokenDataSourceImpl(this.sharedPreferences);
 
   @override
-  saveToken(String token) async {
+  saveTokenAndSubscriptionKey(String token, String subscriptionKey) async {
     final prefs = await sharedPreferences;
     await prefs.setString('token', token);
+    await prefs.setString('subscription_key', subscriptionKey);
   }
 }
