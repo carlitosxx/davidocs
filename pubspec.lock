@@ -85,10 +85,10 @@ packages:
     dependency: transitive
     description:
       name: build_runner_core
-      sha256: "6d6ee4276b1c5f34f21fdf39425202712d2be82019983d52f351c94aafbc2c41"
+      sha256: "30859c90e9ddaccc484f56303931f477b1f1ba2bab74aa32ed5d6ce15870f8cf"
       url: "https://pub.dev"
     source: hosted
-    version: "7.2.10"
+    version: "7.2.8"
   built_collection:
     dependency: transitive
     description:
@@ -417,10 +417,10 @@ packages:
     dependency: transitive
     description:
       name: logging
-      sha256: "623a88c9594aa774443aa3eb2d41807a48486b5613e67599fb4c41c0ad47c340"
+      sha256: c0bbfe94d46aedf9b8b3e695cf3bd48c8e14b35e3b2c639e0aa7755d589ba946
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.0"
+    version: "1.1.0"
   matcher:
     dependency: transitive
     description:

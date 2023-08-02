@@ -14,15 +14,8 @@ export 'get_signin_state.dart';
 
 part 'get_signin_state_notifier.dart';
 
-// * provider
-final signinNotifierProvider =
-    StateNotifierProvider<SigninNotifier, SigninState>((ref) => SigninNotifier(
-          getSigningUC: ref.watch(_getSigninUCProvider),
-        ));
-
 // * respositories Inject
-
-final _authRepositoryProvider = Provider<IAuthRepository>((_) {
+final _repositoryProvider = Provider<IAuthRepository>((_) {
   return AuthRepositoryImpl(
     iSigninDataSource: SigninDataSourceImpl(
       Dio(),
@@ -34,10 +27,16 @@ final _authRepositoryProvider = Provider<IAuthRepository>((_) {
 });
 
 // * usecases Inject
-final _getSigninUCProvider = Provider<GetSigninUC>(
+final _useCaseProvider = Provider<GetSigninUC>(
   (ref) {
-    final repository = ref.watch(_authRepositoryProvider);
+    final repository = ref.watch(_repositoryProvider);
 
     return GetSigninUC(repository);
   },
 );
+
+// * provider
+final signinNotifierProvider =
+    StateNotifierProvider<SigninNotifier, SigninState>((ref) => SigninNotifier(
+          getSigningUC: ref.watch(_useCaseProvider),
+        ));

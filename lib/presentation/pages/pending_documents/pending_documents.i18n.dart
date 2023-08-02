@@ -2,8 +2,9 @@ import 'package:i18n_extension/i18n_extension.dart';
 
 // const kBrand = 'kBrand';
 const kTitle = 'kTitle';
-const kSearchDocument = 'kSearchDocument';
+const kFilterDocument = 'kFilterDocument';
 const kResults = 'kResults';
+const kDocumentPreview = 'kDocumentPreview';
 
 extension PendingDocumentsStrings on String {
   static const _t = Translations.from("en_us", {
@@ -11,13 +12,17 @@ extension PendingDocumentsStrings on String {
       "en_us": "Pending documents",
       "es_es": "Pendientes de firma",
     },
-    kSearchDocument: {
-      "en_us": "Seach document",
-      "es_es": "Buscar documento",
+    kFilterDocument: {
+      "en_us": "Filter document",
+      "es_es": "Filtrar documento",
     },
     kResults: {
       "en_us": "Results",
       "es_es": "Resultados",
+    },
+    kDocumentPreview: {
+      "en_us": "Document preview",
+      "es_es": "Vista previa",
     }
   });
 
