@@ -5,6 +5,8 @@ const kTitle = 'kTitle';
 const kFilterDocument = 'kFilterDocument';
 const kResults = 'kResults';
 const kDocumentPreview = 'kDocumentPreview';
+const kSign = 'kSign';
+const kReject = 'kReject';
 
 extension PendingDocumentsStrings on String {
   static const _t = Translations.from("en_us", {
@@ -23,6 +25,14 @@ extension PendingDocumentsStrings on String {
     kDocumentPreview: {
       "en_us": "Document preview",
       "es_es": "Vista previa",
+    },
+    kSign: {
+      "en_us": "Sign",
+      "es_es": "Firmar",
+    },
+    kReject: {
+      "en_us": "Reject",
+      "es_es": "Rechazar",
     }
   });
 
