@@ -46,8 +46,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     GoRoute(
       name: 'pending_document',
       path: '/pending_document',
-      builder: (context, state) =>
-          I18n(child: const PendingDocumentPhoneView()),
-    )
+      builder: (context, state) => I18n(
+          child: PendingDocumentPhoneView(
+        documentID: state.extra! as String,
+      )),
+    ),
   ]);
 });

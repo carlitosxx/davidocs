@@ -7,6 +7,14 @@ const kResults = 'kResults';
 const kDocumentPreview = 'kDocumentPreview';
 const kSign = 'kSign';
 const kReject = 'kReject';
+//showdialog
+const kTitleShowDialog = 'kTitleShowDialog';
+const kMessageShowDialog = 'kMessageShowDialog';
+const kClose = 'kClose';
+const kHintEnterPin = 'kHintEnterPin';
+const kTitleShowDialogReject = 'kTitleShowDialogReject';
+const kReason = 'kReason';
+const kReasonDetail = 'kReasonDetail';
 
 extension PendingDocumentsStrings on String {
   static const _t = Translations.from("en_us", {
@@ -33,6 +41,36 @@ extension PendingDocumentsStrings on String {
     kReject: {
       "en_us": "Reject",
       "es_es": "Rechazar",
+    },
+    // Show Dialogs
+    kTitleShowDialog: {
+      "en_us": "Send PIN code",
+      "es_es": "Envio de codigo PIN",
+    },
+    kMessageShowDialog: {
+      "en_us": "Reject",
+      "es_es":
+          "Se ha enviado un mensaje a su correo: %s y al celular %s al ingresar el PIN que se le envió, dará por aceptado y firmado el documento",
+    },
+    kClose: {
+      "en_us": "Close",
+      "es_es": "Cerrar",
+    },
+    kHintEnterPin: {
+      "en_us": "Enter your PIN",
+      "es_es": "Ingrese el PIN",
+    },
+    kTitleShowDialogReject: {
+      "en_us": "Reject document",
+      "es_es": "Rechazar documento",
+    },
+    kReason: {
+      "en_us": "Reason:",
+      "es_es": "Motivo:",
+    },
+    kReasonDetail: {
+      "en_us": "Describe the reason",
+      "es_es": "Describe el motivo",
     }
   });
 

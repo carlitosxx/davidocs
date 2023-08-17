@@ -1,6 +1,6 @@
 import 'package:davidocs/presentation/pages/home/widgets/my_drawer.dart';
 import 'package:davidocs/presentation/pages/pending_documents/pending_documents.i18n.dart';
-import 'package:davidocs/presentation/pages/pending_documents/providers/document_selected.provider.dart';
+// import 'package:davidocs/presentation/pages/pending_documents/providers/document_selected.provider.dart';
 import 'package:davidocs/presentation/pages/pending_documents/providers/pending_documents_provider.dart';
 import 'package:davidocs/presentation/routes/routes.dart';
 import 'package:davidocs/presentation/widgets/textfield.widget.dart';
@@ -77,14 +77,14 @@ class PendingDocumentsPhoneViewState
                         // ref
                         //     .read(documentSelectedProvider.notifier)
                         //     .update((state) => item.codigodocumentopendiente);
-                        // print(item.codigodocumentopendiente);
+                        print(item.codigodocumentopendiente);
                         ref
                             .read(pendingDocumentNotifierProvider.notifier)
                             .getDocumentPendingByID(
                                 item.codigodocumentopendiente);
-                        ref
-                            .read(appRouterProvider)
-                            .pushNamed('pending_document');
+                        ref.read(appRouterProvider).pushNamed(
+                            'pending_document',
+                            extra: item.codigodocumentopendiente);
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(
