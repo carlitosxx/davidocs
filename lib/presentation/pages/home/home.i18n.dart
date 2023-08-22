@@ -1,6 +1,9 @@
 import 'package:i18n_extension/i18n_extension.dart';
 
 const kBrand = 'kBrand';
+const kHome = 'kHome';
+const kBusiness = 'kBusiness';
+const kDocuments = 'kDocuments';
 
 extension HomeStrings on String {
   static const _t = Translations.from("en_us", {
@@ -8,6 +11,18 @@ extension HomeStrings on String {
       "en_us": "Davidocs",
       "es_es": "Davidocs",
     },
+    kHome: {
+      "en_us": "Home",
+      "es_es": "Inicio",
+    },
+    kBusiness: {
+      "en_us": "Business:",
+      "es_es": "Empresa:",
+    },
+    kDocuments: {
+      "en_us": "Documents:",
+      "es_es": "Documentos:",
+    }
   });
 
   /// Getter to translate the string

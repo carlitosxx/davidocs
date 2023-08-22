@@ -4,6 +4,7 @@ import 'package:davidocs/core/errors/models/bad_request.model.dart';
 import 'package:davidocs/core/utils/dio_interceptor.util.dart';
 import 'package:davidocs/core/utils/either.util.dart';
 import 'package:davidocs/data/models/response_document.model.dart';
+import 'package:davidocs/data/models/response_list_business.model.dart';
 import 'package:davidocs/data/models/response_reject.model.dart';
 import 'package:davidocs/data/models/response_send_pin.model.dart';
 import 'package:davidocs/domain/repositories/documents/documents.repository.dart';
@@ -26,6 +27,7 @@ abstract class IDocumentPendingDataSource {
     String latitud,
     String longitud,
   );
+  ListBusinessOrFailure getListBusiness();
 }
 
 class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
@@ -138,6 +140,40 @@ class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
     } catch (e) {
       return Either.left(
         HttpRequestFailure.local(),
+      );
+    }
+  }
+
+  @override
+  ListBusinessOrFailure getListBusiness() async {
+    try {
+      String url = '${Environment.apiUrl}listar_empresas';
+
+      dio.interceptors.add(DioInterceptor());
+
+      final response = await dio.post(
+        url,
+      );
+      if (response.statusCode == 200) {
+        List<BusinessModel> listBusiness = [];
+        final lista = response.data['datos'] as Map<String, dynamic>;
+        lista.forEach((k, v) => listBusiness.add(BusinessModel.fromJson(v)));
+        response.data['datos'] = listBusiness;
+        final result = ResponseListBusinessmodel.fromJson(response.data);
+        return Either.right(
+          result,
+        );
+      } else if (response.statusCode == 401) {
+        return Either.left(
+          HttpRequestFailure.unauthorized(),
+        );
+      } else {
+        return Either.left(HttpRequestFailure.notFound());
+      }
+    } catch (e) {
+      print(e);
+      return Either.left(
+        HttpRequestFailure.server(),
       );
     }
   }
