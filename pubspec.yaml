@@ -24,8 +24,9 @@ dependencies:
   pdfx: ^2.4.0
   syncfusion_flutter_pdfviewer: ^22.2.7
   geolocator: ^9.0.2
-  # get_mac_address: ^0.0.2
-  mac_address: ^1.0.0
+  device_info_plus: ^9.0.3
+  dart_ipify: ^1.1.1
+
   
 dev_dependencies:
   flutter_test:

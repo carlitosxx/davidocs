@@ -57,11 +57,13 @@ String badRequestModelToJson(BadRequestModel data) =>
 class BadRequestModel {
   final bool error;
   final String message;
+  final String? notificacion;
   final DateTime timestamp;
 
   BadRequestModel({
     required this.error,
     required this.message,
+    this.notificacion,
     required this.timestamp,
   });
 
@@ -80,12 +82,14 @@ class BadRequestModel {
       BadRequestModel(
         error: json["error"],
         message: json["message"],
+        notificacion: json["notificacion"],
         timestamp: DateTime.parse(json["timestamp"]),
       );
 
   Map<String, dynamic> toJson() => {
         "error": error,
         "message": message,
+        "notificacion": notificacion,
         "timestamp": timestamp.toIso8601String(),
       };
 }

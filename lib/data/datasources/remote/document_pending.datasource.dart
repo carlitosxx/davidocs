@@ -116,6 +116,7 @@ class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
       if (response.statusCode == 200) {
         if (response.data['error'] == false) {
           final login = ResponseRejectModel.fromJson(response.data);
+          print(login.notificacion);
           return Either.right(
             login,
           );

@@ -26,7 +26,7 @@ class RejectNotifier extends StateNotifier<RejectState> {
     );
     result.when(
       left: (error) => state = RejectState.error(
-        mapFailureToString(error),
+        mapFailureToString2(error),
       ),
       right: (rejectEntity) =>
           state = RejectState.data(responseRejectEntity: rejectEntity),
