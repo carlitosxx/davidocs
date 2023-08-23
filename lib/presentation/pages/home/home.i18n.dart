@@ -5,6 +5,8 @@ const kHome = 'kHome';
 const kBusiness = 'kBusiness';
 const kDocuments = 'kDocuments';
 const kDocumentsType = 'kDocumentsType';
+const kDocumentsTitle = 'kDocumentsTitle';
+const kDocumentDetail = 'kDocumentDetail';
 
 extension HomeStrings on String {
   static const _t = Translations.from("en_us", {
@@ -27,6 +29,14 @@ extension HomeStrings on String {
     kDocumentsType: {
       "en_us": "Documents type",
       "es_es": "Tipo de Documentos",
+    },
+    kDocumentsTitle: {
+      "en_us": "Documents",
+      "es_es": "Documentos",
+    },
+    kDocumentDetail: {
+      "en_us": "Document detail",
+      "es_es": "Detalle de Documento",
     }
   });
 

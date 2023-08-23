@@ -1,5 +1,7 @@
 import 'package:davidocs/presentation/pages/auth/auth.page.dart';
 import 'package:davidocs/presentation/pages/home/home.page.dart';
+import 'package:davidocs/presentation/pages/home/views/document_detail_phone.view.dart';
+import 'package:davidocs/presentation/pages/home/views/document_phone.view.dart';
 import 'package:davidocs/presentation/pages/home/views/document_type_phone.view.dart';
 import 'package:davidocs/presentation/pages/pending_documents/pending_documents.page.dart';
 import 'package:davidocs/presentation/pages/pending_documents/views/pending_document_phone.view.dart';
@@ -31,6 +33,20 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       path: '/document_type',
       builder: (context, state) => I18n(
         child: const DocumentTypePhoneView(),
+      ),
+    ),
+    GoRoute(
+      name: 'document',
+      path: '/document',
+      builder: (context, state) => I18n(
+        child: const DocumentPhoneView(),
+      ),
+    ),
+    GoRoute(
+      name: 'document_detail',
+      path: '/document_detail',
+      builder: (context, state) => I18n(
+        child: const DocumentDetailPhoneView(),
       ),
     ),
     GoRoute(

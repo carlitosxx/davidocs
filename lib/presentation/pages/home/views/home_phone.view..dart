@@ -41,68 +41,67 @@ class HomePhoneView extends ConsumerWidget {
                         .getListDocumentType(
                             listBusiness.datos[index].codigoempresa);
                     ref.read(appRouterProvider).pushNamed('document_type');
-                    // print(listBusiness.datos[index].codigoempresa);
                   },
                   child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.background,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onBackground
-                                .withOpacity(0.2),
-                            blurRadius: 2,
-                            offset: const Offset(1, 1),
-                          )
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Row(
-                              children: [
-                                Image.asset(
-                                  'assets/images/company.png',
-                                  height: 50,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(kBusiness.i18n),
-                                      Text(
-                                        listBusiness.datos[index].nombre,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const Divider(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            // crossAxisAlignment: CrossAxisAlignment.stretch,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.background,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onBackground
+                              .withOpacity(0.2),
+                          blurRadius: 2,
+                          offset: const Offset(1, 1),
+                        )
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Row(
                             children: [
-                              Text(
-                                  ' ${kDocuments.i18n} ${listBusiness.datos[index].totaldocumentos}'),
-                              Icon(
-                                Icons.description_outlined,
-                                color: Theme.of(context).colorScheme.outline,
+                              Image.asset(
+                                'assets/images/company.png',
+                                height: 50,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(kBusiness.i18n),
+                                    Text(
+                                      listBusiness.datos[index].nombre,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
-                          )
-                        ],
-                      )),
+                          ),
+                        ),
+                        const Divider(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          // crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                                ' ${kDocuments.i18n} ${listBusiness.datos[index].totaldocumentos}'),
+                            Icon(
+                              Icons.description_outlined,
+                              color: Theme.of(context).colorScheme.outline,
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),

@@ -4,8 +4,11 @@ import 'package:davidocs/core/errors/models/bad_request.model.dart';
 import 'package:davidocs/core/utils/catch_dio_error.util.dart';
 import 'package:davidocs/core/utils/dio_interceptor.util.dart';
 import 'package:davidocs/core/utils/either.util.dart';
+import 'package:davidocs/data/models/document.model.dart';
+import 'package:davidocs/data/models/document_detail.model.dart';
 import 'package:davidocs/data/models/document_type.model.dart';
 import 'package:davidocs/data/models/response_document.model.dart';
+import 'package:davidocs/data/models/response_documents.model.dart';
 import 'package:davidocs/data/models/response_list_business.model.dart';
 import 'package:davidocs/data/models/response_list_document_type.model.dart';
 import 'package:davidocs/data/models/response_reject.model.dart';
@@ -32,6 +35,11 @@ abstract class IDocumentPendingDataSource {
   );
   ListBusinessOrFailure getListBusiness();
   ListDocumentsTypeOrFailure getListDocumentType(String codigoempresa);
+  ListDocumentsOrFailure getListDocuments(
+    String codigoempresa,
+    String codigotipodocumento,
+  );
+  DocumentDetailOrFailure getDocumentDetail(String codigodocumento);
 }
 
 class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
@@ -198,6 +206,88 @@ class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
             (k, v) => listDocumentType.add(DocumentTypeModel.fromJson(v)));
         response.data['datos'] = listDocumentType;
         final result = ResponseListDocumentTypeModel.fromJson(response.data);
+        return Either.right(
+          result,
+        );
+      } else if (response.statusCode == 401) {
+        return Either.left(
+          HttpRequestFailure.unauthorized(),
+        );
+      } else {
+        return Either.left(HttpRequestFailure.notFound());
+      }
+    } on DioException catch (e) {
+      return Either.left(
+        catchDioError(e),
+      );
+    } catch (e) {
+      print(e);
+      return Either.left(
+        HttpRequestFailure.server(),
+      );
+    }
+  }
+
+  @override
+  ListDocumentsOrFailure getListDocuments(
+      String codigoempresa, String codigotipodocumento) async {
+    try {
+      String url = '${Environment.apiUrl}listar_documentos';
+      final Map<String, dynamic> data = {
+        'codigoempresa': codigoempresa,
+        'codigotipodocumento': codigotipodocumento,
+      };
+      dio.interceptors.add(
+        DioInterceptor(),
+      );
+
+      final response = await dio.post(url, data: data);
+      if (response.statusCode == 200) {
+        List<DocumentModel> listDocument = [];
+        final lista = response.data['datos'] as Map<String, dynamic>;
+        lista.forEach((k, v) => listDocument.add(DocumentModel.fromJson(v)));
+        response.data['datos'] = listDocument;
+        final result = ResponseListDocumentsModel.fromJson(response.data);
+        return Either.right(
+          result,
+        );
+      } else if (response.statusCode == 401) {
+        return Either.left(
+          HttpRequestFailure.unauthorized(),
+        );
+      } else {
+        return Either.left(HttpRequestFailure.notFound());
+      }
+    } on DioException catch (e) {
+      return Either.left(
+        catchDioError(e),
+      );
+    } catch (e) {
+      print(e);
+      return Either.left(
+        HttpRequestFailure.server(),
+      );
+    }
+  }
+
+  @override
+  DocumentDetailOrFailure getDocumentDetail(String codigodocumento) async {
+    try {
+      String url = '${Environment.apiUrl}ver_documento';
+      final Map<String, dynamic> data = {
+        'codigodocumento': codigodocumento,
+      };
+      dio.interceptors.add(
+        DioInterceptor(),
+      );
+
+      final response = await dio.post(url, data: data);
+      if (response.statusCode == 200) {
+        // List<DocumentModel> listDocument = [];
+        // final lista = response.data['datos'] as Map<String, dynamic>;
+        // lista.forEach((k, v) => listDocument.add(DocumentModel.fromJson(v)));
+        // response.data['datos'] = listDocument;
+        final result = DocumentDetailModel.fromJson(response.data);
         return Either.right(
           result,
         );
