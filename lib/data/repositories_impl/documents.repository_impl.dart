@@ -109,4 +109,17 @@ class DocumentsRepositoryImpl implements IDocumentsRepository {
       );
     }
   }
+
+  @override
+  ListDocumentsTypeOrFailure getListDocumentsType(String codigoempresa) async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi) {
+      return _iDocumentPendingDataSource.getListDocumentType(codigoempresa);
+    } else {
+      return Either.left(
+        HttpRequestFailure.network(),
+      );
+    }
+  }
 }

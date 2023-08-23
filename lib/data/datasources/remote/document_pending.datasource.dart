@@ -1,10 +1,13 @@
 import 'package:davidocs/core/constants/environment.dart';
 import 'package:davidocs/core/errors/http_request.error.dart';
 import 'package:davidocs/core/errors/models/bad_request.model.dart';
+import 'package:davidocs/core/utils/catch_dio_error.util.dart';
 import 'package:davidocs/core/utils/dio_interceptor.util.dart';
 import 'package:davidocs/core/utils/either.util.dart';
+import 'package:davidocs/data/models/document_type.model.dart';
 import 'package:davidocs/data/models/response_document.model.dart';
 import 'package:davidocs/data/models/response_list_business.model.dart';
+import 'package:davidocs/data/models/response_list_document_type.model.dart';
 import 'package:davidocs/data/models/response_reject.model.dart';
 import 'package:davidocs/data/models/response_send_pin.model.dart';
 import 'package:davidocs/domain/repositories/documents/documents.repository.dart';
@@ -28,6 +31,7 @@ abstract class IDocumentPendingDataSource {
     String longitud,
   );
   ListBusinessOrFailure getListBusiness();
+  ListDocumentsTypeOrFailure getListDocumentType(String codigoempresa);
 }
 
 class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
@@ -170,6 +174,44 @@ class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
       } else {
         return Either.left(HttpRequestFailure.notFound());
       }
+    } catch (e) {
+      return Either.left(
+        HttpRequestFailure.server(),
+      );
+    }
+  }
+
+  @override
+  ListDocumentsTypeOrFailure getListDocumentType(String codigoempresa) async {
+    try {
+      String url = '${Environment.apiUrl}listar_tipodocumentos';
+      final Map<String, dynamic> data = {
+        'codigoempresa': codigoempresa,
+      };
+      dio.interceptors.add(DioInterceptor());
+
+      final response = await dio.post(url, data: data);
+      if (response.statusCode == 200) {
+        List<DocumentTypeModel> listDocumentType = [];
+        final lista = response.data['datos'] as Map<String, dynamic>;
+        lista.forEach(
+            (k, v) => listDocumentType.add(DocumentTypeModel.fromJson(v)));
+        response.data['datos'] = listDocumentType;
+        final result = ResponseListDocumentTypeModel.fromJson(response.data);
+        return Either.right(
+          result,
+        );
+      } else if (response.statusCode == 401) {
+        return Either.left(
+          HttpRequestFailure.unauthorized(),
+        );
+      } else {
+        return Either.left(HttpRequestFailure.notFound());
+      }
+    } on DioException catch (e) {
+      return Either.left(
+        catchDioError(e),
+      );
     } catch (e) {
       print(e);
       return Either.left(

@@ -1,6 +1,7 @@
 import 'package:davidocs/presentation/pages/home/home.i18n.dart';
 import 'package:davidocs/presentation/pages/home/providers/injects_provider.dart';
 import 'package:davidocs/presentation/pages/home/widgets/my_drawer.dart';
+import 'package:davidocs/presentation/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -35,7 +36,12 @@ class HomePhoneView extends ConsumerWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: GestureDetector(
                   onTap: () {
-                    print(listBusiness.datos[index].codigoempresa);
+                    ref
+                        .read(listDocumentsTypeProvider.notifier)
+                        .getListDocumentType(
+                            listBusiness.datos[index].codigoempresa);
+                    ref.read(appRouterProvider).pushNamed('document_type');
+                    // print(listBusiness.datos[index].codigoempresa);
                   },
                   child: Container(
                       padding: const EdgeInsets.all(16),

@@ -3,6 +3,7 @@ import 'package:davidocs/core/errors/http_request.error.dart';
 import 'package:davidocs/domain/entities/response_document.entity.dart';
 import 'package:davidocs/domain/entities/response_documents_pending.entity.dart';
 import 'package:davidocs/domain/entities/response_list_business.entity.dart';
+import 'package:davidocs/domain/entities/response_list_document_type.entity.dart';
 import 'package:davidocs/domain/entities/response_reject.entity.dart';
 import 'package:davidocs/domain/entities/response_send_document_pending.entity.dart';
 import 'package:davidocs/domain/entities/response_send_pin.entity.dart';
@@ -20,6 +21,8 @@ typedef RejectOrFailure
 
 typedef ListBusinessOrFailure
     = Future<Either<HttpRequestFailure, ResponseListBusinessEntity>>;
+typedef ListDocumentsTypeOrFailure
+    = Future<Either<HttpRequestFailure, ResponseListDocumentTypeEntity>>;
 
 abstract class IDocumentsRepository {
   DataOrFailure getListDocumentsPending();
@@ -41,4 +44,5 @@ abstract class IDocumentsRepository {
     String longitud,
   );
   ListBusinessOrFailure getListBusiness();
+  ListDocumentsTypeOrFailure getListDocumentsType(String codigoempresa);
 }

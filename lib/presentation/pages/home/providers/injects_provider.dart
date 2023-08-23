@@ -6,12 +6,18 @@ import 'package:davidocs/data/repositories_impl/documents.repository_impl.dart';
 import 'package:davidocs/domain/repositories/documents/documents.repository.dart';
 
 import 'package:davidocs/domain/usecases/get_list_business.usecase.dart';
+import 'package:davidocs/domain/usecases/get_list_documents_type.usecase.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'business/business_state.dart';
+import 'document_type/document_type_state.dart';
+
 export 'business/business_state.dart';
+export 'document_type/document_type_state.dart';
+
 part 'business/business_notifier.dart';
+part 'document_type/document_type_notifier.dart';
 
 // * repositories Inject
 
@@ -32,10 +38,23 @@ final _getListBusinessUCProvider = Provider<GetListBusinessUC>(
   },
 );
 
+final _getListDocumentsTypeUCProvider = Provider<GetListDocumentsTypeUC>(
+  (ref) {
+    final repository = ref.watch(_businessRepositoryProvider);
+    return GetListDocumentsTypeUC(repository);
+  },
+);
+
 //* Provider
 final listBusinessProvider =
     StateNotifierProvider<BusinessNotifier, BusinessState>(
   (ref) => BusinessNotifier(
     getListBusinessUC: ref.watch(_getListBusinessUCProvider),
   )..getListBusiness(),
+);
+final listDocumentsTypeProvider =
+    StateNotifierProvider<DocumentTypeNotifier, DocumentTypeState>(
+  (ref) => DocumentTypeNotifier(
+    getListDocumentsTypeUC: ref.watch(_getListDocumentsTypeUCProvider),
+  ),
 );
