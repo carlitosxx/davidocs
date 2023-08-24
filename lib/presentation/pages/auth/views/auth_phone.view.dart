@@ -170,11 +170,8 @@ class AuthPhoneviewState extends ConsumerState<AuthPhoneview> {
                         Text(kRemember.i18n)
                       ],
                     ),
+                    // Spacer(),
                     //power by
-                    Image.asset(
-                      "assets/images/poweredbyv3.png",
-                      height: 50,
-                    ),
                     state.maybeWhen(
                       orElse: () => const SizedBox.shrink(),
                       error: (message) {
@@ -192,6 +189,14 @@ class AuthPhoneviewState extends ConsumerState<AuthPhoneview> {
                           ),
                         );
                       },
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.only(top: 40),
+                      child: Image.asset(
+                        "assets/images/poweredbyv3.png",
+                        height: 50,
+                      ),
                     ),
                   ],
                 ),

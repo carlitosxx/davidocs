@@ -12,7 +12,7 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final appRouter = ref.watch(appRouterProvider);
     return MaterialApp.router(
-      title: 'Flutter Demo',
+      title: 'DaviDocs',
       routerConfig: appRouter,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

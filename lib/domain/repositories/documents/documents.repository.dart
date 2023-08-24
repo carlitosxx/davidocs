@@ -1,6 +1,7 @@
 import 'package:davidocs/core/utils/either.util.dart';
 import 'package:davidocs/core/errors/http_request.error.dart';
 import 'package:davidocs/domain/entities/document_detail.entity.dart';
+import 'package:davidocs/domain/entities/download.entity.dart';
 import 'package:davidocs/domain/entities/response_document.entity.dart';
 import 'package:davidocs/domain/entities/response_documents.entity.dart';
 import 'package:davidocs/domain/entities/response_documents_pending.entity.dart';
@@ -29,6 +30,7 @@ typedef ListDocumentsOrFailure
     = Future<Either<HttpRequestFailure, ResponseListDocumentsEntity>>;
 typedef DocumentDetailOrFailure
     = Future<Either<HttpRequestFailure, DocumentDetailEntity>>;
+typedef DownloadOrFailure = Future<Either<HttpRequestFailure, DownloadEntity>>;
 
 abstract class IDocumentsRepository {
   DataOrFailure getListDocumentsPending();
@@ -56,4 +58,5 @@ abstract class IDocumentsRepository {
       String codigoempresa, String codigotipodocumento);
 
   DocumentDetailOrFailure getDocumentDetail(String codigodocumento);
+  DownloadOrFailure getDownloadFile(String codigodocumento);
 }

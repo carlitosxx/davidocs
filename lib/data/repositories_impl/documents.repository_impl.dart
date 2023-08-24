@@ -154,4 +154,19 @@ class DocumentsRepositoryImpl implements IDocumentsRepository {
       );
     }
   }
+
+  @override
+  DownloadOrFailure getDownloadFile(String codigodocumento) async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi) {
+      return _iDocumentPendingDataSource.getDownloadFile(
+        codigodocumento,
+      );
+    } else {
+      return Either.left(
+        HttpRequestFailure.network(),
+      );
+    }
+  }
 }

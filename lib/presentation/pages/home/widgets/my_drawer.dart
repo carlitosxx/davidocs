@@ -1,4 +1,6 @@
 import 'package:davidocs/presentation/pages/auth/providers/get_signin/get_signin_provider.dart';
+import 'package:davidocs/presentation/pages/home/home.i18n.dart';
+import 'package:davidocs/presentation/pages/pending_documents/providers/pending_documents_provider.dart';
 import 'package:davidocs/presentation/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,6 +13,7 @@ class MyDrawer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final signinState = ref.watch(signinNotifierProvider);
+    final countPendingSign = ref.watch(pendingDocumentsNotifierProvider);
     return Drawer(
       child: Column(
         children: [
@@ -71,115 +74,160 @@ class MyDrawer extends ConsumerWidget {
           Flexible(
             flex: 65,
             fit: FlexFit.tight,
-            child: Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    ref.read(appRouterProvider).goNamed('home');
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 16, bottom: 20),
-                    child: Row(
-                      children: [
-                        const Padding(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      ref.read(appRouterProvider).goNamed('home');
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 16, bottom: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            kHome.i18n,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onBackground,
+                            ),
+                          ),
+                          const Padding(
+                              padding: EdgeInsets.only(right: 16),
+                              child: Icon(Icons.home_outlined)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      ref.read(appRouterProvider).goNamed('pending_documents');
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 16, bottom: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            kPendingSign.i18n,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onBackground,
+                            ),
+                          ),
+                          Stack(
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(right: 16),
+                                child: Icon(Icons.border_color_outlined),
+                              ),
+                              Positioned(
+                                top: 0,
+                                right: 10,
+                                child: Container(
+                                  height: 15,
+                                  width: 15,
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primaryContainer,
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      countPendingSign.maybeWhen(
+                                        orElse: () => '0',
+                                        data: (value) =>
+                                            value.numdocumentos.toString(),
+                                      ),
+                                      style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimaryContainer,
+                                        fontSize: 8,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 16, bottom: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            kNotification.i18n,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onBackground,
+                            ),
+                          ),
+                          const Padding(
+                              padding: EdgeInsets.only(right: 16),
+                              child: Icon(Icons.notifications_outlined)),
+                        ],
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      ref.read(appRouterProvider).pushNamed('welcome');
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 16, bottom: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            kProfile.i18n,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onBackground,
+                            ),
+                          ),
+                          const Padding(
                             padding: EdgeInsets.only(right: 16),
-                            child: Icon(Icons.home_outlined)),
-                        Text(
-                          'Inicio',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onBackground,
+                            child: Icon(
+                              Icons.person_outline,
+                            ),
                           ),
-                        )
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    ref.read(appRouterProvider).goNamed('pending_documents');
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 16, bottom: 20),
-                    child: Row(
-                      children: [
-                        const Padding(
-                            padding: EdgeInsets.only(right: 16),
-                            child: Icon(Icons.border_color_outlined)),
-                        Text(
-                          'Pendientes de firma',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onBackground,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {},
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 16, bottom: 20),
-                    child: Row(
-                      children: [
-                        const Padding(
-                            padding: EdgeInsets.only(right: 16),
-                            child: Icon(Icons.notifications_outlined)),
-                        Text(
-                          'Notificacion',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onBackground,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    ref.read(appRouterProvider).pushNamed('welcome');
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 16, bottom: 10),
-                    child: Row(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(right: 16),
-                          child: Icon(
-                            Icons.person_outline,
-                          ),
-                        ),
-                        Text(
-                          'Perfil',
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onBackground,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           Flexible(
             flex: 10,
-            // fit: FlexFit.tight,
-            child: Column(
-              children: [
-                const Divider(),
-                ListTile(
-                  leading: const Icon(
-                    Icons.logout,
-                  ),
-                  title: Text(
-                    'Cerrar sesion',
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                children: [
+                  const Divider(),
+                  ListTile(
+                    title: Text(
+                      kLogout.i18n,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onBackground,
+                      ),
                     ),
+                    trailing: const Icon(
+                      Icons.logout,
+                    ),
+                    onTap: () {
+                      ref.read(appRouterProvider).pushReplacementNamed('auth');
+                    },
                   ),
-                  onTap: () {},
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

@@ -112,7 +112,7 @@ class DocumentPhoneView extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                                ' ${kDocuments.i18n} ${responseListDocumentsEntity.datos[index].totaldescargas}'),
+                                ' ${kDownloads.i18n} ${responseListDocumentsEntity.datos[index].totaldescargas}'),
                             Text(responseListDocumentsEntity
                                 .datos[index].historicoEnt)
                           ],

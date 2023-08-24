@@ -7,6 +7,7 @@ import 'package:davidocs/core/utils/either.util.dart';
 import 'package:davidocs/data/models/document.model.dart';
 import 'package:davidocs/data/models/document_detail.model.dart';
 import 'package:davidocs/data/models/document_type.model.dart';
+import 'package:davidocs/data/models/donwload.model.dart';
 import 'package:davidocs/data/models/response_document.model.dart';
 import 'package:davidocs/data/models/response_documents.model.dart';
 import 'package:davidocs/data/models/response_list_business.model.dart';
@@ -40,6 +41,7 @@ abstract class IDocumentPendingDataSource {
     String codigotipodocumento,
   );
   DocumentDetailOrFailure getDocumentDetail(String codigodocumento);
+  DownloadOrFailure getDownloadFile(String codigodocumento);
 }
 
 class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
@@ -283,11 +285,43 @@ class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
 
       final response = await dio.post(url, data: data);
       if (response.statusCode == 200) {
-        // List<DocumentModel> listDocument = [];
-        // final lista = response.data['datos'] as Map<String, dynamic>;
-        // lista.forEach((k, v) => listDocument.add(DocumentModel.fromJson(v)));
-        // response.data['datos'] = listDocument;
         final result = DocumentDetailModel.fromJson(response.data);
+        return Either.right(
+          result,
+        );
+      } else if (response.statusCode == 401) {
+        return Either.left(
+          HttpRequestFailure.unauthorized(),
+        );
+      } else {
+        return Either.left(HttpRequestFailure.notFound());
+      }
+    } on DioException catch (e) {
+      return Either.left(
+        catchDioError(e),
+      );
+    } catch (e) {
+      print(e);
+      return Either.left(
+        HttpRequestFailure.server(),
+      );
+    }
+  }
+
+  @override
+  DownloadOrFailure getDownloadFile(String codigodocumento) async {
+    try {
+      String url = '${Environment.apiUrl}descargar_documento';
+      final Map<String, dynamic> data = {
+        'codigodocumento': codigodocumento,
+      };
+      dio.interceptors.add(
+        DioInterceptor(),
+      );
+
+      final response = await dio.post(url, data: data);
+      if (response.statusCode == 200) {
+        final result = DownloadModel.fromJson(response.data);
         return Either.right(
           result,
         );

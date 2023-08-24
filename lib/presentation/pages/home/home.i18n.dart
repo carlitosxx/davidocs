@@ -9,6 +9,12 @@ const kDocumentsTitle = 'kDocumentsTitle';
 const kDocumentDetail = 'kDocumentDetail';
 const kDetailSign = 'kDetailSign';
 const kDownload = 'kDownload';
+const kDownloads = 'kDownloads';
+const kMessageDetailDocument = 'kMessageDetailDocument';
+const kLogout = 'kLogout';
+const kProfile = 'kProfile';
+const kNotification = 'kNotification';
+const kPendingSign = 'kPendingSign';
 
 extension HomeStrings on String {
   static const _t = Translations.from("en_us", {
@@ -47,6 +53,30 @@ extension HomeStrings on String {
     kDownload: {
       "en_us": "Download",
       "es_es": "Descargar",
+    },
+    kDownloads: {
+      "en_us": "Downloads",
+      "es_es": "Descargas",
+    },
+    kMessageDetailDocument: {
+      "en_us": "To view the full document, proceed to download it.",
+      "es_es": "Para ver el documento completo proceda a descargarlo",
+    },
+    kLogout: {
+      "en_us": "Logout",
+      "es_es": "Cerrar sesión",
+    },
+    kProfile: {
+      "en_us": "Profile",
+      "es_es": "Perfil",
+    },
+    kNotification: {
+      "en_us": "Notification",
+      "es_es": "Notificacion",
+    },
+    kPendingSign: {
+      "en_us": "Pending Sign",
+      "es_es": "Pendientes de firma",
     }
   });
 

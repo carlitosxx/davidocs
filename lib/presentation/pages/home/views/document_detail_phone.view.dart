@@ -24,11 +24,23 @@ class DocumentDetailPhoneView extends ConsumerWidget {
             child: CircularProgressIndicator(),
           ),
         ),
-        data: (documentDetailEntity) => Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Column(
-            children: [
-              Container(
+        data: (documentDetailEntity) => Column(
+          children: [
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              color: Color(0xffdeebf7),
+              child: Text(
+                "Para ver el documento completo proceda a descargarlo",
+                textAlign: TextAlign.center,
+                // style: TextStyle(color: SecondaryColor),
+                style: TextStyle(color: Color(0xff7f7f7f)),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Container(
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
@@ -46,25 +58,25 @@ class DocumentDetailPhoneView extends ConsumerWidget {
                       documentDetailEntity.datos.documento.imgPrevia)),
                 ),
               ),
-              const SizedBox(
-                height: 16,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                      onPressed: () {
-                        ref.read(appRouterProvider).pushNamed('detail_sign');
-                      },
-                      child: Text(kDetailSign.i18n)),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  OutlinedButton(onPressed: () {}, child: Text(kDownload.i18n)),
-                ],
-              )
-            ],
-          ),
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                    onPressed: () {
+                      ref.read(appRouterProvider).pushNamed('detail_sign');
+                    },
+                    child: Text(kDetailSign.i18n)),
+                const SizedBox(
+                  width: 16,
+                ),
+                OutlinedButton(onPressed: () {}, child: Text(kDownload.i18n)),
+              ],
+            )
+          ],
         ),
         error: (message) => Text(message ?? 'error desconocido'),
       ),

@@ -44,8 +44,33 @@ class DetailSignPhoneView extends ConsumerWidget {
               return SingleChildScrollView(
                 child: Html(
                   data: documentDetailEntity.datos.documento.detallefirma,
-                  extensions: const [
-                    TableHtmlExtension(),
+                  extensions: [
+                    const TableHtmlExtension(),
+                    TagExtension(
+                      tagsToExtend: {"img"},
+                      builder: (extensionContext) {
+                        if (extensionContext.attributes['src']
+                                ?.endsWith('certificado.png') ??
+                            false) {
+                          return SvgPicture.asset(
+                              'assets/images/workspace_premium.svg',
+                              colorFilter: const ColorFilter.mode(
+                                  Colors.green, BlendMode.srcIn));
+                        } else if (extensionContext.attributes['src']
+                                ?.endsWith('ok.png') ??
+                            false) {
+                          return const Icon(
+                            Icons.check,
+                            color: Colors.green,
+                          );
+                        } else {
+                          return const Icon(
+                            Icons.remove,
+                            color: Colors.grey,
+                          );
+                        }
+                      },
+                    ),
                   ],
                   style: {
                     "table": Style(
