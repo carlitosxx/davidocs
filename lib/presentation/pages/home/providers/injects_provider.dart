@@ -24,7 +24,7 @@ export 'document/document_state.dart';
 part 'business/business_notifier.dart';
 part 'document_type/document_type_notifier.dart';
 part 'document/document_notifier.dart';
-part 'document_detail/document_notifier.dart';
+part 'document_detail/document_detail_notifier.dart';
 // * repositories Inject
 
 final _businessRepositoryProvider = Provider<IDocumentsRepository>(
@@ -57,7 +57,12 @@ final _getListDocumentsUCProvider = Provider<GetListDocumentsUC>(
     return GetListDocumentsUC(repository);
   },
 );
-
+final _getDocumentDetailUCProvider = Provider<GetDocumentDetailUC>(
+  (ref) {
+    final repository = ref.watch(_businessRepositoryProvider);
+    return GetDocumentDetailUC(repository);
+  },
+);
 //* Provider
 final listBusinessProvider =
     StateNotifierProvider<BusinessNotifier, BusinessState>(
@@ -76,5 +81,12 @@ final listDocumentsProvider =
     StateNotifierProvider<DocumentNotifier, DocumentState>(
   (ref) => DocumentNotifier(
     getListDocumentsUC: ref.watch(_getListDocumentsUCProvider),
+  ),
+);
+
+final documentDetailProvider =
+    StateNotifierProvider<DocumentDetailNotifier, DocumentDetailState>(
+  (ref) => DocumentDetailNotifier(
+    getDocumentDetailUC: ref.watch(_getDocumentDetailUCProvider),
   ),
 );

@@ -1,5 +1,6 @@
 import 'package:davidocs/presentation/pages/auth/auth.page.dart';
 import 'package:davidocs/presentation/pages/home/home.page.dart';
+import 'package:davidocs/presentation/pages/home/views/detail_sign_phone.view.dart';
 import 'package:davidocs/presentation/pages/home/views/document_detail_phone.view.dart';
 import 'package:davidocs/presentation/pages/home/views/document_phone.view.dart';
 import 'package:davidocs/presentation/pages/home/views/document_type_phone.view.dart';
@@ -47,6 +48,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       path: '/document_detail',
       builder: (context, state) => I18n(
         child: const DocumentDetailPhoneView(),
+      ),
+    ),
+    GoRoute(
+      name: 'detail_sign',
+      path: '/detail_sign',
+      builder: (context, state) => I18n(
+        child: const DetailSignPhoneView(),
       ),
     ),
     GoRoute(

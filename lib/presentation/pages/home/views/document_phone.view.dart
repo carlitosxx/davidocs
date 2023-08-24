@@ -36,6 +36,10 @@ class DocumentPhoneView extends ConsumerWidget {
                   onTap: () {
                     print(responseListDocumentsEntity
                         .datos[index].codigodocumento);
+                    ref
+                        .read(documentDetailProvider.notifier)
+                        .getDocumentDetailUC(responseListDocumentsEntity
+                            .datos[index].codigodocumento);
                     ref.read(appRouterProvider).pushNamed('document_detail');
                   },
                   child: Container(
