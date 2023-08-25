@@ -64,8 +64,8 @@ final _useCaseRejectProvider = Provider<RejectUC>(
 
 // * providers
 /// Provider of pending documents
-final pendingDocumentsNotifierProvider = StateNotifierProvider.autoDispose<
-    PendingDocumentsNotifier, PedingDocumentsState>(
+final pendingDocumentsNotifierProvider =
+    StateNotifierProvider<PendingDocumentsNotifier, PedingDocumentsState>(
   (ref) => PendingDocumentsNotifier(
     getDocumentsPendingUC: ref.watch(_useCaseDocumentsPendingProvider),
   )..getListDocumentsPending(),

@@ -134,7 +134,9 @@ class MyDrawer extends ConsumerWidget {
                                     borderRadius: BorderRadius.circular(50),
                                   ),
                                   child: Center(
-                                    child: Text(
+                                    child:
+                                        // Text('0'),
+                                        Text(
                                       countPendingSign.maybeWhen(
                                         orElse: () => '0',
                                         data: (value) =>

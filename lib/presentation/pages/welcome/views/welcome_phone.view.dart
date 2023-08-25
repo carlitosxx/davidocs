@@ -1,4 +1,5 @@
 import 'package:davidocs/presentation/pages/auth/providers/get_signin/get_signin_provider.dart';
+import 'package:davidocs/presentation/pages/pending_documents/providers/pending_documents_provider.dart';
 import 'package:davidocs/presentation/pages/welcome/welcome.i18n.dart';
 import 'package:davidocs/presentation/routes/routes.dart';
 import 'package:davidocs/presentation/widgets/button.widget.dart';
@@ -105,6 +106,9 @@ class WelcomePhoneView extends ConsumerWidget {
           text: kNext.i18n,
           isPrimary: true,
           onButtonClick: () {
+            // ref
+            //     .read(pendingDocumentsNotifierProvider.notifier)
+            //     .getListDocumentsPending();
             ref.read(appRouterProvider).goNamed('home');
           },
         ),
