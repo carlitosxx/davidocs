@@ -53,14 +53,14 @@ class PendingDocumentPhoneViewState
     final sendPendingDocumentState =
         ref.watch(sendPendingDocumentNotifierProvider);
 
-    ref.listen(
-      sendPendingDocumentNotifierProvider.select((value) => value),
-      ((prev, next) {
-        next.whenOrNull(
-            data: (responseSendDocumentPendingEntity) =>
-                print(responseSendDocumentPendingEntity.codigotoken));
-      }),
-    );
+    // ref.listen(
+    //   sendPendingDocumentNotifierProvider.select((value) => value),
+    //   ((prev, next) {
+    //     next.whenOrNull(
+    //         data: (responseSendDocumentPendingEntity) =>
+    //             print(responseSendDocumentPendingEntity.codigotoken));
+    //   }),
+    // );
     ref.listen(rejectNotifierProvider.select((value) => value), ((prev, next) {
       next.whenOrNull(data: (responseRejectEntity) {
         ref.read(appRouterProvider).pop();
@@ -133,6 +133,7 @@ class PendingDocumentPhoneViewState
                   final String information =
                       "App DaviDocs versión 2.0 con sistema operativo [ Android ${androidDeviceInfo.version.release} API Level ${androidDeviceInfo.version.sdkInt}] - IpPublica [$ipPublic] - RedLocal [$network] Mac: [unknown] Model: ${androidDeviceInfo.model}";
 
+                  // ignore: use_build_context_synchronously
                   _dialogSignBuilder(context, ref, information);
                 },
                 child: Text(kSign.i18n),

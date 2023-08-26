@@ -132,7 +132,7 @@ class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
       if (response.statusCode == 200) {
         if (response.data['error'] == false) {
           final login = ResponseRejectModel.fromJson(response.data);
-          print(login.notificacion);
+
           return Either.right(
             login,
           );
@@ -223,7 +223,6 @@ class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
         catchDioError(e),
       );
     } catch (e) {
-      print(e);
       return Either.left(
         HttpRequestFailure.server(),
       );
@@ -265,7 +264,6 @@ class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
         catchDioError(e),
       );
     } catch (e) {
-      print(e);
       return Either.left(
         HttpRequestFailure.server(),
       );
@@ -301,7 +299,6 @@ class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
         catchDioError(e),
       );
     } catch (e) {
-      print(e);
       return Either.left(
         HttpRequestFailure.server(),
       );
@@ -337,7 +334,6 @@ class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
         catchDioError(e),
       );
     } catch (e) {
-      print(e);
       return Either.left(
         HttpRequestFailure.server(),
       );

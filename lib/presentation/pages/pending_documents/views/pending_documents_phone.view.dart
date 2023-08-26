@@ -74,10 +74,6 @@ class PendingDocumentsPhoneViewState
                     final item = documentsPending.datos[index];
                     return GestureDetector(
                       onTap: () {
-                        // ref
-                        //     .read(documentSelectedProvider.notifier)
-                        //     .update((state) => item.codigodocumentopendiente);
-                        print(item.codigodocumentopendiente);
                         ref
                             .read(pendingDocumentNotifierProvider.notifier)
                             .getDocumentPendingByID(

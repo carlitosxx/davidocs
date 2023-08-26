@@ -34,8 +34,6 @@ class DocumentPhoneView extends ConsumerWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: GestureDetector(
                   onTap: () {
-                    print(responseListDocumentsEntity
-                        .datos[index].codigodocumento);
                     ref
                         .read(documentDetailProvider.notifier)
                         .getDocumentDetailUC(responseListDocumentsEntity

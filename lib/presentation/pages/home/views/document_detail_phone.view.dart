@@ -5,6 +5,7 @@ import 'package:davidocs/presentation/pages/home/providers/injects_provider.dart
 import 'package:davidocs/presentation/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class DocumentDetailPhoneView extends ConsumerWidget {
   const DocumentDetailPhoneView({super.key});
@@ -12,6 +13,15 @@ class DocumentDetailPhoneView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final documentDetailState = ref.watch(documentDetailProvider);
+    final downloadState = ref.watch(downloadProvider);
+    ref.listen(
+      downloadProvider.select((value) => value),
+      ((prev, next) {
+        next.whenOrNull(data: (downloadEntity) {
+          print(downloadEntity.datos.documento.filename);
+        });
+      }),
+    );
     return Scaffold(
       appBar: AppBar(
         title: Text(kDocumentDetail.i18n),
@@ -28,14 +38,13 @@ class DocumentDetailPhoneView extends ConsumerWidget {
           children: [
             Container(
               width: double.infinity,
-              margin: EdgeInsets.symmetric(horizontal: 20),
-              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-              color: Color(0xffdeebf7),
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              color: const Color(0xffdeebf7),
               child: Text(
-                "Para ver el documento completo proceda a descargarlo",
+                kMessageDetailDocument.i18n,
                 textAlign: TextAlign.center,
-                // style: TextStyle(color: SecondaryColor),
-                style: TextStyle(color: Color(0xff7f7f7f)),
+                style: const TextStyle(color: Color(0xff7f7f7f)),
               ),
             ),
             Padding(
@@ -73,7 +82,20 @@ class DocumentDetailPhoneView extends ConsumerWidget {
                 const SizedBox(
                   width: 16,
                 ),
-                OutlinedButton(onPressed: () {}, child: Text(kDownload.i18n)),
+                downloadState.maybeWhen(
+                  orElse: () => OutlinedButton(
+                    onPressed: () {
+                      ref.read(downloadProvider.notifier).getDownloadFile(
+                          documentDetailEntity.datos.documento.codigodocumento);
+                    },
+                    child: Text(kDownload.i18n),
+                  ),
+                  loading: () => OutlinedButton(
+                    onPressed: null,
+                    child: LoadingAnimationWidget.prograssiveDots(
+                        color: Theme.of(context).colorScheme.primary, size: 36),
+                  ),
+                ),
               ],
             )
           ],

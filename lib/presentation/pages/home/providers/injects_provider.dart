@@ -5,11 +5,13 @@ import 'package:davidocs/data/datasources/remote/send_document_pending.datasourc
 import 'package:davidocs/data/repositories_impl/documents.repository_impl.dart';
 import 'package:davidocs/domain/repositories/documents/documents.repository.dart';
 import 'package:davidocs/domain/usecases/get_document_detail.usecase.dart';
+import 'package:davidocs/domain/usecases/get_download_file.usecase.dart';
 
 import 'package:davidocs/domain/usecases/get_list_business.usecase.dart';
 import 'package:davidocs/domain/usecases/get_list_documents.usecase.dart';
 import 'package:davidocs/domain/usecases/get_list_documents_type.usecase.dart';
 import 'package:davidocs/presentation/pages/home/providers/document_detail/document_detail_state.dart';
+import 'package:davidocs/presentation/pages/home/providers/download/download_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -25,6 +27,7 @@ part 'business/business_notifier.dart';
 part 'document_type/document_type_notifier.dart';
 part 'document/document_notifier.dart';
 part 'document_detail/document_detail_notifier.dart';
+part 'download/download_notifier.dart';
 // * repositories Inject
 
 final _businessRepositoryProvider = Provider<IDocumentsRepository>(
@@ -63,6 +66,13 @@ final _getDocumentDetailUCProvider = Provider<GetDocumentDetailUC>(
     return GetDocumentDetailUC(repository);
   },
 );
+final _getDownloadFileUCProvider = Provider<GetDownloadFileUC>(
+  (ref) {
+    final repository = ref.watch(_businessRepositoryProvider);
+    return GetDownloadFileUC(repository);
+  },
+);
+
 //* Provider
 final listBusinessProvider =
     StateNotifierProvider<BusinessNotifier, BusinessState>(
@@ -70,6 +80,7 @@ final listBusinessProvider =
     getListBusinessUC: ref.watch(_getListBusinessUCProvider),
   )..getListBusiness(),
 );
+
 final listDocumentsTypeProvider =
     StateNotifierProvider<DocumentTypeNotifier, DocumentTypeState>(
   (ref) => DocumentTypeNotifier(
@@ -89,4 +100,9 @@ final documentDetailProvider =
   (ref) => DocumentDetailNotifier(
     getDocumentDetailUC: ref.watch(_getDocumentDetailUCProvider),
   ),
+);
+
+final downloadProvider = StateNotifierProvider<DownloadNotifier, DownloadState>(
+  (ref) => DownloadNotifier(
+      getDownloadFileUC: ref.watch(_getDownloadFileUCProvider)),
 );

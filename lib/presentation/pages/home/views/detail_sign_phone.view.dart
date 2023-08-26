@@ -1,3 +1,4 @@
+import 'package:davidocs/presentation/pages/home/home.i18n.dart';
 import 'package:davidocs/presentation/pages/home/providers/injects_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html_table/flutter_html_table.dart';
@@ -14,18 +15,18 @@ class DetailSignPhoneView extends ConsumerWidget {
 
   srcReplaceRender({String? srcCertToMatch, String? srcOkToMatch}) =>
       (context, attributes, element) {
-        if ((attributes["src"]?.endsWith(srcCertToMatch ?? "") ?? false))
+        if ((attributes["src"]?.endsWith(srcCertToMatch ?? "") ?? false)) {
           return SvgPicture.asset(
             'assets/images/workspace_premium.svg',
             // color: Colors.green,
           );
-        else if ((attributes["src"]?.endsWith(srcOkToMatch ?? "") ?? false)) {
-          return Icon(
+        } else if ((attributes["src"]?.endsWith(srcOkToMatch ?? "") ?? false)) {
+          return const Icon(
             Icons.check,
             color: Colors.green,
           );
         } else {
-          return Icon(
+          return const Icon(
             Icons.remove,
             color: Colors.grey,
           );
@@ -36,10 +37,10 @@ class DetailSignPhoneView extends ConsumerWidget {
     final documentDetailState = ref.watch(documentDetailProvider);
     return Scaffold(
         appBar: AppBar(
-          title: Text('Detalle de firma'),
+          title: Text(kDetailOfSign.i18n),
         ),
         body: documentDetailState.maybeWhen(
-            orElse: () => Text('orElse'),
+            orElse: () => const Text('orElse'),
             data: (documentDetailEntity) {
               return SingleChildScrollView(
                 child: Html(

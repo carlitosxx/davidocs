@@ -7,6 +7,7 @@ const kDocuments = 'kDocuments';
 const kDocumentsType = 'kDocumentsType';
 const kDocumentsTitle = 'kDocumentsTitle';
 const kDocumentDetail = 'kDocumentDetail';
+const kDetailOfSign = 'kDetailOfSign';
 const kDetailSign = 'kDetailSign';
 const kDownload = 'kDownload';
 const kDownloads = 'kDownloads';
@@ -49,6 +50,10 @@ extension HomeStrings on String {
     kDetailSign: {
       "en_us": "Detail sign",
       "es_es": "Detalle firma",
+    },
+    kDetailOfSign: {
+      "en_us": "Detail sign",
+      "es_es": "Detalle de firma",
     },
     kDownload: {
       "en_us": "Download",

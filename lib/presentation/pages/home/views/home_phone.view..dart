@@ -1,7 +1,7 @@
 import 'package:davidocs/presentation/pages/home/home.i18n.dart';
 import 'package:davidocs/presentation/pages/home/providers/injects_provider.dart';
 import 'package:davidocs/presentation/pages/home/widgets/my_drawer.dart';
-import 'package:davidocs/presentation/pages/pending_documents/providers/pending_documents_provider.dart';
+
 import 'package:davidocs/presentation/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,13 +12,10 @@ class HomePhoneView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final listBusinessState = ref.watch(listBusinessProvider);
-    // ref
-    //     .read(pendingDocumentsNotifierProvider.notifier)
-    //     .getListDocumentsPending();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(kHome.i18n),
-        // leading: IconButton(onPressed: () {}, icon: Icon(Icons.menu)),
       ),
       body: CustomScrollView(
         slivers: [
