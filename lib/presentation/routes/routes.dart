@@ -4,6 +4,7 @@ import 'package:davidocs/presentation/pages/home/views/detail_sign_phone.view.da
 import 'package:davidocs/presentation/pages/home/views/document_detail_phone.view.dart';
 import 'package:davidocs/presentation/pages/home/views/document_phone.view.dart';
 import 'package:davidocs/presentation/pages/home/views/document_type_phone.view.dart';
+import 'package:davidocs/presentation/pages/home/views/notification_phone.view.dart';
 import 'package:davidocs/presentation/pages/pending_documents/pending_documents.page.dart';
 import 'package:davidocs/presentation/pages/pending_documents/views/pending_document_phone.view.dart';
 import 'package:davidocs/presentation/pages/splash/splash.page.dart';
@@ -79,9 +80,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       name: 'pending_document',
       path: '/pending_document',
       builder: (context, state) => I18n(
-          child: PendingDocumentPhoneView(
-        documentID: state.extra! as String,
-      )),
+        child: PendingDocumentPhoneView(
+          documentID: state.extra! as String,
+        ),
+      ),
     ),
+    GoRoute(
+      name: 'notification',
+      path: '/notification',
+      builder: (context, state) => I18n(
+        child: const NotificationPhoneView(),
+      ),
+    )
   ]);
 });

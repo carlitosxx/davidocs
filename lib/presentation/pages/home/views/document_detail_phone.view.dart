@@ -1,11 +1,17 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:davidocs/presentation/pages/home/home.i18n.dart';
 import 'package:davidocs/presentation/pages/home/providers/injects_provider.dart';
 import 'package:davidocs/presentation/routes/routes.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class DocumentDetailPhoneView extends ConsumerWidget {
   const DocumentDetailPhoneView({super.key});
@@ -17,9 +23,49 @@ class DocumentDetailPhoneView extends ConsumerWidget {
     ref.listen(
       downloadProvider.select((value) => value),
       ((prev, next) {
-        next.whenOrNull(data: (downloadEntity) {
-          print(downloadEntity.datos.documento.filename);
-        });
+        next.whenOrNull(
+          data: (downloadEntity) async {
+            Directory? directory = Platform.isAndroid
+                ? await getExternalStorageDirectory()
+                : await getApplicationDocumentsDirectory();
+
+            String path = "";
+            String download =
+                Platform.isAndroid ? "/../../../../Davidocs" : "/Files";
+
+            if (directory != null) path = '${directory.path}$download';
+            bool exist = await Directory(path).exists();
+            if (!exist) {
+              await Directory(path).create(recursive: true);
+            }
+            String imageb64 = downloadEntity.datos.documento.contenidodocumento
+                .replaceAll('\n', '');
+            Uint8List bytes = base64.decode(imageb64);
+            File file =
+                File("$path/${downloadEntity.datos.documento.filename}");
+            await file.writeAsBytes(bytes.buffer.asInt8List());
+
+            // ignore: use_build_context_synchronously
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      "Se descargó el archivo ${downloadEntity.datos.documento.filename}",
+                      softWrap: true,
+                    ),
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        OpenFile.open(
+                            "$path/${downloadEntity.datos.documento.filename}");
+                      },
+                      child: Text("ABRIR"))
+                ],
+              ),
+            ));
+          },
+        );
       }),
     );
     return Scaffold(
@@ -84,7 +130,69 @@ class DocumentDetailPhoneView extends ConsumerWidget {
                 ),
                 downloadState.maybeWhen(
                   orElse: () => OutlinedButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      try {
+                        if (!await Permission.storage.request().isGranted) {
+                          // ignore: use_build_context_synchronously
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "Debe activar los permisos de Storage",
+                                      softWrap: true,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+
+                        if (Platform.isAndroid) {
+                          DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+                          AndroidDeviceInfo androidInfo =
+                              await deviceInfo.androidInfo;
+                          if ((androidInfo.version.sdkInt) > 29) {
+                            if (!await Permission.manageExternalStorage
+                                .request()
+                                .isGranted) {
+                              // ignore: use_build_context_synchronously
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          "Debe activar los permisos de Storage",
+                                          softWrap: true,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
+                          }
+                        }
+                      } catch (e) {
+                        // ignore: use_build_context_synchronously
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    "Ocurrio un error",
+                                    softWrap: true,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
                       ref.read(downloadProvider.notifier).getDownloadFile(
                           documentDetailEntity.datos.documento.codigodocumento);
                     },

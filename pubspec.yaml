@@ -28,6 +28,9 @@ dependencies:
   dart_ipify: ^1.1.1
   flutter_html: ^3.0.0-beta.2
   flutter_html_table: ^3.0.0-beta.2
+  permission_handler: ^10.4.3
+  path_provider: ^2.1.0
+  open_file: ^3.3.2
   
   
 dev_dependencies:
@@ -36,6 +39,12 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   build_runner: ^2.3.3
   freezed: ^2.3.2
+  flutter_launcher_icons: "^0.13.1"
+flutter_icons:
+  android:  true
+  ios:  true
+  image_path: "assets/images/icon_davidocs.png"
+
 flutter:
 
   uses-material-design: true

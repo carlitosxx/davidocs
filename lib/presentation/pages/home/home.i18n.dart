@@ -16,6 +16,7 @@ const kLogout = 'kLogout';
 const kProfile = 'kProfile';
 const kNotification = 'kNotification';
 const kPendingSign = 'kPendingSign';
+const kFilterDocument = 'kFilterDocument';
 
 extension HomeStrings on String {
   static const _t = Translations.from("en_us", {
@@ -82,6 +83,10 @@ extension HomeStrings on String {
     kPendingSign: {
       "en_us": "Pending Sign",
       "es_es": "Pendientes de firma",
+    },
+    kFilterDocument: {
+      "en_us": "Filter document",
+      "es_es": "Filtrar documento",
     }
   });
 

@@ -159,7 +159,9 @@ class MyDrawer extends ConsumerWidget {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      ref.read(appRouterProvider).pushNamed('notification');
+                    },
                     child: Padding(
                       padding: const EdgeInsets.only(left: 16, bottom: 20),
                       child: Row(
