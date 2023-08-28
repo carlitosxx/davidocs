@@ -63,40 +63,45 @@ class DocumentPhoneView extends ConsumerWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                children: [
-                                  Image.asset(
-                                    'assets/images/pdf.png',
-                                    height: 50,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 16.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          responseListDocumentsEntity
-                                              .datos[index].detalledocumento,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        Text(
-                                          responseListDocumentsEntity
-                                              .datos[index].periodo,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        )
-                                      ],
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/pdf.png',
+                                      height: 50,
                                     ),
-                                  ),
-                                ],
+                                    const SizedBox(
+                                      width: 16,
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            responseListDocumentsEntity
+                                                .datos[index].detalledocumento,
+                                            softWrap: true,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            responseListDocumentsEntity
+                                                .datos[index].periodo,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              responseListDocumentsEntity
-                                          .datos[index].visualizado ==
-                                      'SI'
+                              int.parse(responseListDocumentsEntity
+                                          .datos[index].totaldescargas) >
+                                      0
                                   ? const Icon(
                                       Icons.check_circle,
                                       color: Colors.blue,

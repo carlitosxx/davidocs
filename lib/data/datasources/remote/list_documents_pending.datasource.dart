@@ -1,5 +1,6 @@
 import 'package:davidocs/core/constants/environment.dart';
 import 'package:davidocs/core/errors/http_request.error.dart';
+import 'package:davidocs/core/errors/models/bad_request.model.dart';
 import 'package:davidocs/core/utils/dio_interceptor.util.dart';
 import 'package:davidocs/core/utils/either.util.dart';
 import 'package:davidocs/data/models/document_pending.model.dart';
@@ -27,14 +28,26 @@ class ListDocumentsPendingDataSourceImpl
       );
       if (response.statusCode == 200) {
         List<DocumentPendingModel> listDocumentsPending = [];
-        final lista = response.data['datos'] as Map<String, dynamic>;
-        lista.forEach((k, v) =>
-            listDocumentsPending.add(DocumentPendingModel.fromJson(v)));
-        response.data['datos'] = listDocumentsPending;
-        final result = ResponseDocumentsPendingModel.fromJson(response.data);
-        return Either.right(
-          result,
-        );
+        if (response.data['numdocumentos'] > 0) {
+          final lista = response.data['datos'] as Map<String, dynamic>;
+          lista.forEach((k, v) =>
+              listDocumentsPending.add(DocumentPendingModel.fromJson(v)));
+          response.data['datos'] = listDocumentsPending;
+          final result = ResponseDocumentsPendingModel.fromJson(response.data);
+          return Either.right(
+            result,
+          );
+        } else {
+          return Either.left(
+            HttpRequestFailure.badRequest(
+              BadRequestModel(
+                error: true,
+                message: 'No hay documentos pendientes de firma',
+                timestamp: DateTime.now(),
+              ),
+            ),
+          );
+        }
       } else if (response.statusCode == 401) {
         return Either.left(
           HttpRequestFailure.unauthorized(),

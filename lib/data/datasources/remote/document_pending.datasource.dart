@@ -203,14 +203,27 @@ class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
       final response = await dio.post(url, data: data);
       if (response.statusCode == 200) {
         List<DocumentTypeModel> listDocumentType = [];
-        final lista = response.data['datos'] as Map<String, dynamic>;
-        lista.forEach(
-            (k, v) => listDocumentType.add(DocumentTypeModel.fromJson(v)));
-        response.data['datos'] = listDocumentType;
-        final result = ResponseListDocumentTypeModel.fromJson(response.data);
-        return Either.right(
-          result,
-        );
+        if (response.data['numtipodocumentos'] > 0) {
+          final lista = response.data['datos'] as Map<String, dynamic>;
+
+          lista.forEach(
+              (k, v) => listDocumentType.add(DocumentTypeModel.fromJson(v)));
+          response.data['datos'] = listDocumentType;
+          final result = ResponseListDocumentTypeModel.fromJson(response.data);
+          return Either.right(
+            result,
+          );
+        } else {
+          return Either.left(
+            HttpRequestFailure.badRequest(
+              BadRequestModel(
+                error: true,
+                message: 'No hay tipo de documentos',
+                timestamp: DateTime.now(),
+              ),
+            ),
+          );
+        }
       } else if (response.statusCode == 401) {
         return Either.left(
           HttpRequestFailure.unauthorized(),
@@ -223,6 +236,7 @@ class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
         catchDioError(e),
       );
     } catch (e) {
+      print(e);
       return Either.left(
         HttpRequestFailure.server(),
       );
