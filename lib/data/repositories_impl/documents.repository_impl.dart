@@ -169,4 +169,17 @@ class DocumentsRepositoryImpl implements IDocumentsRepository {
       );
     }
   }
+
+  @override
+  ListNotificationsOrFailure getListNotifications() async {
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile ||
+        connectivityResult == ConnectivityResult.wifi) {
+      return _iDocumentPendingDataSource.getListNotifications();
+    } else {
+      return Either.left(
+        HttpRequestFailure.network(),
+      );
+    }
+  }
 }

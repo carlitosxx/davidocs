@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
-// import 'package:go_router/go_router.dart';
+
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -53,14 +53,6 @@ class PendingDocumentPhoneViewState
     final sendPendingDocumentState =
         ref.watch(sendPendingDocumentNotifierProvider);
 
-    // ref.listen(
-    //   sendPendingDocumentNotifierProvider.select((value) => value),
-    //   ((prev, next) {
-    //     next.whenOrNull(
-    //         data: (responseSendDocumentPendingEntity) =>
-    //             print(responseSendDocumentPendingEntity.codigotoken));
-    //   }),
-    // );
     ref.listen(rejectNotifierProvider.select((value) => value), ((prev, next) {
       next.whenOrNull(data: (responseRejectEntity) {
         ref.read(appRouterProvider).pop();

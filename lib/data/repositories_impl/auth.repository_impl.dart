@@ -17,21 +17,28 @@ class AuthRepositoryImpl implements IAuthRepository {
 
   @override
   DataOrFailure getSignin(String user, String password) async {
-    final connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.mobile ||
-        connectivityResult == ConnectivityResult.wifi) {
-      DataOrFailure dataOrFailureFuture =
-          _iSigninDataSource.getLogin(user, password);
-      Either<HttpRequestFailure, ResponseSigninEntity> dataOrFailure =
-          await dataOrFailureFuture;
-      dataOrFailure.whenOrNull(
-        right: (value) async {
-          await _iTokenDataSource.saveTokenAndSubscriptionKey(
-              value.token ?? '', value.subscriptionKey);
-        },
-      );
-      return dataOrFailureFuture;
-    } else {
+    try {
+      final connectivityResult = await (Connectivity().checkConnectivity());
+      if (connectivityResult == ConnectivityResult.mobile ||
+          connectivityResult == ConnectivityResult.wifi) {
+        DataOrFailure dataOrFailureFuture =
+            _iSigninDataSource.getLogin(user, password);
+        Either<HttpRequestFailure, ResponseSigninEntity> dataOrFailure =
+            await dataOrFailureFuture;
+        dataOrFailure.whenOrNull(
+          right: (value) async {
+            await _iTokenDataSource.saveTokenAndSubscriptionKey(
+                value.token ?? '', value.subscriptionKey);
+          },
+        );
+        return dataOrFailureFuture;
+      } else {
+        return Either.left(
+          HttpRequestFailure.network(),
+        );
+      }
+    } catch (e) {
+      print(e);
       return Either.left(
         HttpRequestFailure.network(),
       );

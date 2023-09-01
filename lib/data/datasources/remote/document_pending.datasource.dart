@@ -8,10 +8,12 @@ import 'package:davidocs/data/models/document.model.dart';
 import 'package:davidocs/data/models/document_detail.model.dart';
 import 'package:davidocs/data/models/document_type.model.dart';
 import 'package:davidocs/data/models/donwload.model.dart';
+import 'package:davidocs/data/models/notifications.model.dart';
 import 'package:davidocs/data/models/response_document.model.dart';
 import 'package:davidocs/data/models/response_documents.model.dart';
 import 'package:davidocs/data/models/response_list_business.model.dart';
 import 'package:davidocs/data/models/response_list_document_type.model.dart';
+import 'package:davidocs/data/models/response_list_notifications.model.dart';
 import 'package:davidocs/data/models/response_reject.model.dart';
 import 'package:davidocs/data/models/response_send_pin.model.dart';
 import 'package:davidocs/domain/repositories/documents/documents.repository.dart';
@@ -42,6 +44,7 @@ abstract class IDocumentPendingDataSource {
   );
   DocumentDetailOrFailure getDocumentDetail(String codigodocumento);
   DownloadOrFailure getDownloadFile(String codigodocumento);
+  ListNotificationsOrFailure getListNotifications();
 }
 
 class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
@@ -348,6 +351,58 @@ class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
         catchDioError(e),
       );
     } catch (e) {
+      return Either.left(
+        HttpRequestFailure.server(),
+      );
+    }
+  }
+
+  @override
+  ListNotificationsOrFailure getListNotifications() async {
+    try {
+      String url = '${Environment.apiUrl}listar_notificaciones';
+
+      dio.interceptors.add(DioInterceptor());
+
+      final response = await dio.post(
+        url,
+      );
+      if (response.statusCode == 200) {
+        List<NotificationsModel> listNotifications = [];
+        if (response.data['numnotificaciones'] > 0) {
+          final lista = response.data['datos'] as Map<String, dynamic>;
+
+          lista.forEach(
+              (k, v) => listNotifications.add(NotificationsModel.fromJson(v)));
+          response.data['datos'] = listNotifications;
+          final result = ResponseListNotificationsModel.fromJson(response.data);
+          return Either.right(
+            result,
+          );
+        } else {
+          return Either.left(
+            HttpRequestFailure.badRequest(
+              BadRequestModel(
+                error: true,
+                message: 'No hay notificaciones',
+                timestamp: DateTime.now(),
+              ),
+            ),
+          );
+        }
+      } else if (response.statusCode == 401) {
+        return Either.left(
+          HttpRequestFailure.unauthorized(),
+        );
+      } else {
+        return Either.left(HttpRequestFailure.notFound());
+      }
+    } on DioException catch (e) {
+      return Either.left(
+        catchDioError(e),
+      );
+    } catch (e) {
+      print(e);
       return Either.left(
         HttpRequestFailure.server(),
       );

@@ -7,6 +7,7 @@ import 'package:davidocs/domain/entities/response_documents.entity.dart';
 import 'package:davidocs/domain/entities/response_documents_pending.entity.dart';
 import 'package:davidocs/domain/entities/response_list_business.entity.dart';
 import 'package:davidocs/domain/entities/response_list_document_type.entity.dart';
+import 'package:davidocs/domain/entities/response_list_notifications.entity.dart';
 import 'package:davidocs/domain/entities/response_reject.entity.dart';
 import 'package:davidocs/domain/entities/response_send_document_pending.entity.dart';
 import 'package:davidocs/domain/entities/response_send_pin.entity.dart';
@@ -31,6 +32,8 @@ typedef ListDocumentsOrFailure
 typedef DocumentDetailOrFailure
     = Future<Either<HttpRequestFailure, DocumentDetailEntity>>;
 typedef DownloadOrFailure = Future<Either<HttpRequestFailure, DownloadEntity>>;
+typedef ListNotificationsOrFailure
+    = Future<Either<HttpRequestFailure, ResponseListNotificationsEntity>>;
 
 abstract class IDocumentsRepository {
   DataOrFailure getListDocumentsPending();
@@ -59,4 +62,5 @@ abstract class IDocumentsRepository {
 
   DocumentDetailOrFailure getDocumentDetail(String codigodocumento);
   DownloadOrFailure getDownloadFile(String codigodocumento);
+  ListNotificationsOrFailure getListNotifications();
 }

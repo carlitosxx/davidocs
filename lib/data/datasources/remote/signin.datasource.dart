@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:davidocs/core/constants/environment.dart';
 import 'package:davidocs/core/errors/http_request.error.dart';
 import 'package:davidocs/core/errors/models/bad_request.model.dart';
+import 'package:davidocs/core/utils/catch_dio_error.util.dart';
 import 'package:davidocs/core/utils/either.util.dart';
 import 'package:davidocs/data/models/response_signin.model.dart';
 import 'package:davidocs/domain/repositories/auth/auth.repository.dart';
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 
 abstract class ISigninDataSource {
   DataOrFailure getLogin(String user, String password);
@@ -20,6 +24,12 @@ class SigninDataSourceImpl implements ISigninDataSource {
       String urlSubscriptionKey = "${Environment.apiUrl}subscription_key";
       String urlAccesToken = "${Environment.apiUrl}access_token";
       Map<String, dynamic> data = {"Username": user, "Password": password};
+      // (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+      //     (HttpClient dioClient) {
+      //   dioClient.badCertificateCallback =
+      //       ((X509Certificate cert, String host, int port) => true);
+      //   return dioClient;
+      // };
       final response = await dio.post(urlSubscriptionKey, data: data);
       if (response.statusCode == 200) {
         if (response.data['error'] == null) {
@@ -46,7 +56,13 @@ class SigninDataSourceImpl implements ISigninDataSource {
           HttpRequestFailure.server(),
         );
       }
+    } on DioException catch (e) {
+      print(e);
+      return Either.left(
+        catchDioError(e),
+      );
     } catch (e) {
+      print(e);
       return Either.left(
         HttpRequestFailure.local(),
       );
