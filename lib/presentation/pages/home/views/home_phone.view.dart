@@ -1,6 +1,7 @@
 import 'package:davidocs/presentation/pages/home/home.i18n.dart';
 import 'package:davidocs/presentation/pages/home/providers/injects_provider.dart';
 import 'package:davidocs/presentation/pages/home/widgets/my_drawer.dart';
+import 'package:davidocs/presentation/pages/pending_documents/providers/pending_documents_provider.dart';
 
 import 'package:davidocs/presentation/routes/routes.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,49 @@ class HomePhoneView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final listBusinessState = ref.watch(listBusinessProvider);
 
+    ref.listen(
+      pendingDocumentsNotifierProvider.select((value) => value),
+      ((prev, next) {
+        next.whenOrNull(
+          data: (pendingDocuments) async {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text(kNotification.i18n),
+                  content: Text(
+                    '${kDocumentsPendingMessage.i18n} ${pendingDocuments.numdocumentos.toString()}',
+                    textAlign: TextAlign.center,
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        textStyle: Theme.of(context).textTheme.labelLarge,
+                      ),
+                      child: const Text('cerrar'),
+                      onPressed: () {
+                        ref.read(appRouterProvider).pop();
+                      },
+                    ),
+                    ElevatedButton(
+                      style: TextButton.styleFrom(
+                        textStyle: Theme.of(context).textTheme.labelLarge,
+                      ),
+                      child: const Text('ver'),
+                      onPressed: () {
+                        ref
+                            .read(appRouterProvider)
+                            .pushNamed('pending_documents');
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        );
+      }),
+    );
     return Scaffold(
       appBar: AppBar(
         title: Text(kHome.i18n),
@@ -97,7 +141,6 @@ class HomePhoneView extends ConsumerWidget {
                         const Divider(),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          // crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Text(
                                 ' ${kDocuments.i18n} ${listBusiness.datos[index].totaldocumentos}'),

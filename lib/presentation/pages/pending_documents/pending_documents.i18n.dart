@@ -15,6 +15,9 @@ const kHintEnterPin = 'kHintEnterPin';
 const kTitleShowDialogReject = 'kTitleShowDialogReject';
 const kReason = 'kReason';
 const kReasonDetail = 'kReasonDetail';
+const kTitleDialogReject = 'kTitleDialogReject';
+const kContentMessageReject = 'kContentMessageReject';
+const kcontentMessageGps = 'kcontentMessageGps';
 
 extension PendingDocumentsStrings on String {
   static const _t = Translations.from("en_us", {
@@ -71,6 +74,18 @@ extension PendingDocumentsStrings on String {
     kReasonDetail: {
       "en_us": "Describe the reason",
       "es_es": "Describe el motivo",
+    },
+    kTitleDialogReject: {
+      "en_us": "Alert",
+      "es_es": "Alerta",
+    },
+    kContentMessageReject: {
+      "en_us": "You must turn on location permissions",
+      "es_es": "Debe activar los permisos de ubicación",
+    },
+    kcontentMessageGps: {
+      "en_us": "Location service (GPS) is disabled",
+      "es_es": "El servicio de ubicacion (GPS) esta desabilitado",
     }
   });
 

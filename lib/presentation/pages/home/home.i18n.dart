@@ -17,6 +17,7 @@ const kProfile = 'kProfile';
 const kNotification = 'kNotification';
 const kPendingSign = 'kPendingSign';
 const kFilterDocument = 'kFilterDocument';
+const kDocumentsPendingMessage = 'kDocumentsPendingMessage';
 
 extension HomeStrings on String {
   static const _t = Translations.from("en_us", {
@@ -87,6 +88,10 @@ extension HomeStrings on String {
     kFilterDocument: {
       "en_us": "Filter document",
       "es_es": "Filtrar documento",
+    },
+    kDocumentsPendingMessage: {
+      "en_us": "You have documents pending signature: ",
+      "es_es": "Usted tiene documentos pendientes de firma: ",
     }
   });
 
