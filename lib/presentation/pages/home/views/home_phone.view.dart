@@ -125,9 +125,7 @@ class HomePhoneView extends ConsumerWidget {
                                     ),
                                     Text(
                                       listBusiness.datos[index].nombre,
-                                      // maxLines: 2,
                                       softWrap: true,
-                                      // overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),

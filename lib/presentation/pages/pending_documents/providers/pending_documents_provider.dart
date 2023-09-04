@@ -1,4 +1,5 @@
 import 'package:davidocs/core/utils/map_failure_to_string.util.dart';
+import 'package:davidocs/data/datasources/local/gps.datasource.dart';
 import 'package:davidocs/data/datasources/remote/document_pending.datasource.dart';
 import 'package:davidocs/data/datasources/remote/list_documents_pending.datasource.dart';
 import 'package:davidocs/data/datasources/remote/send_document_pending.datasource.dart';
@@ -25,10 +26,11 @@ part 'reject/reject_state_notifier.dart';
 // * respositories Inject
 final _repositoryProvider = Provider<IDocumentsRepository>((_) {
   return DocumentsRepositoryImpl(
-      iListDocumentsPendingDataSource:
-          ListDocumentsPendingDataSourceImpl(Dio()),
-      iDocumentPendingDataSource: DocumentPendingDatasourceImpl(Dio()),
-      iSendDocumentPendingDataSource: SendDocumentPendingDataSourceImpl(Dio()));
+    iListDocumentsPendingDataSource: ListDocumentsPendingDataSourceImpl(Dio()),
+    iDocumentPendingDataSource: DocumentPendingDatasourceImpl(Dio()),
+    iSendDocumentPendingDataSource: SendDocumentPendingDataSourceImpl(Dio()),
+    iGpsDataSource: GpsDataSourceImpl(),
+  );
 });
 
 // * usecases Inject

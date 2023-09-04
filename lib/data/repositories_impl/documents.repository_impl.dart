@@ -1,6 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:davidocs/core/errors/http_request.error.dart';
 import 'package:davidocs/core/utils/either.util.dart';
+import 'package:davidocs/data/datasources/local/gps.datasource.dart';
 import 'package:davidocs/data/datasources/remote/document_pending.datasource.dart';
 import 'package:davidocs/data/datasources/remote/list_documents_pending.datasource.dart';
 import 'package:davidocs/data/datasources/remote/send_document_pending.datasource.dart';
@@ -10,13 +11,16 @@ class DocumentsRepositoryImpl implements IDocumentsRepository {
   final IListDocumentsPendingDataSource _iListDocumentsPendingDataSource;
   final IDocumentPendingDataSource _iDocumentPendingDataSource;
   final ISendDocumentPendingDataSource _iSendDocumentPendingDataSource;
+  final IGpsDataSource _iGpsDataSource;
   DocumentsRepositoryImpl({
     required IListDocumentsPendingDataSource iListDocumentsPendingDataSource,
     required IDocumentPendingDataSource iDocumentPendingDataSource,
     required ISendDocumentPendingDataSource iSendDocumentPendingDataSource,
+    required IGpsDataSource iGpsDataSource,
   })  : _iListDocumentsPendingDataSource = iListDocumentsPendingDataSource,
         _iDocumentPendingDataSource = iDocumentPendingDataSource,
-        _iSendDocumentPendingDataSource = iSendDocumentPendingDataSource;
+        _iSendDocumentPendingDataSource = iSendDocumentPendingDataSource,
+        _iGpsDataSource = iGpsDataSource;
 
   @override
   DataOrFailure getListDocumentsPending() async {
@@ -181,5 +185,10 @@ class DocumentsRepositoryImpl implements IDocumentsRepository {
         HttpRequestFailure.network(),
       );
     }
+  }
+
+  @override
+  ServiceAndPermissionOrFailure validateServiceAndPermission() {
+    return _iGpsDataSource.validateGps();
   }
 }

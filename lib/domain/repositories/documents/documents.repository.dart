@@ -1,3 +1,4 @@
+import 'package:davidocs/core/errors/local_request.error.dart';
 import 'package:davidocs/core/utils/either.util.dart';
 import 'package:davidocs/core/errors/http_request.error.dart';
 import 'package:davidocs/domain/entities/document_detail.entity.dart';
@@ -34,6 +35,8 @@ typedef DocumentDetailOrFailure
 typedef DownloadOrFailure = Future<Either<HttpRequestFailure, DownloadEntity>>;
 typedef ListNotificationsOrFailure
     = Future<Either<HttpRequestFailure, ResponseListNotificationsEntity>>;
+typedef ServiceAndPermissionOrFailure
+    = Future<Either<LocalRequestFailure, bool>>;
 
 abstract class IDocumentsRepository {
   DataOrFailure getListDocumentsPending();
@@ -63,4 +66,5 @@ abstract class IDocumentsRepository {
   DocumentDetailOrFailure getDocumentDetail(String codigodocumento);
   DownloadOrFailure getDownloadFile(String codigodocumento);
   ListNotificationsOrFailure getListNotifications();
+  ServiceAndPermissionOrFailure validateServiceAndPermission();
 }

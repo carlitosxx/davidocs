@@ -53,12 +53,15 @@ class PendingDocumentPhoneViewState
     final sendPendingDocumentState =
         ref.watch(sendPendingDocumentNotifierProvider);
 
-    ref.listen(rejectNotifierProvider.select((value) => value), ((prev, next) {
-      next.whenOrNull(data: (responseRejectEntity) {
-        ref.read(appRouterProvider).pop();
-        ref.read(appRouterProvider).goNamed('home');
-      });
-    }));
+    ref.listen(
+      rejectNotifierProvider.select((value) => value),
+      ((prev, next) {
+        next.whenOrNull(data: (responseRejectEntity) {
+          ref.read(appRouterProvider).pop();
+          ref.read(appRouterProvider).goNamed('home');
+        });
+      }),
+    );
     return Scaffold(
       appBar: AppBar(
         title: Text(kDocumentPreview.i18n),
@@ -559,8 +562,3 @@ Future<void> _dialogSignBuilder(
     },
   );
 }
-
-// Future<void> _dialogRejectBuilder(
-//     BuildContext context, WidgetRef ref, String information) {
-//   return 
-// }

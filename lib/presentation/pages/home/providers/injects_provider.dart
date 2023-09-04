@@ -1,4 +1,5 @@
 import 'package:davidocs/core/utils/map_failure_to_string.util.dart';
+import 'package:davidocs/data/datasources/local/gps.datasource.dart';
 import 'package:davidocs/data/datasources/remote/document_pending.datasource.dart';
 import 'package:davidocs/data/datasources/remote/list_documents_pending.datasource.dart';
 import 'package:davidocs/data/datasources/remote/send_document_pending.datasource.dart';
@@ -38,6 +39,7 @@ final _businessRepositoryProvider = Provider<IDocumentsRepository>(
     iListDocumentsPendingDataSource: ListDocumentsPendingDataSourceImpl(Dio()),
     iDocumentPendingDataSource: DocumentPendingDatasourceImpl(Dio()),
     iSendDocumentPendingDataSource: SendDocumentPendingDataSourceImpl(Dio()),
+    iGpsDataSource: GpsDataSourceImpl(),
   ),
 );
 
@@ -119,8 +121,8 @@ final downloadProvider = StateNotifierProvider<DownloadNotifier, DownloadState>(
 );
 
 final listNotificationsProvider =
-    StateNotifierProvider<NotificationNotifier, NotificationState>(
+    StateNotifierProvider.autoDispose<NotificationNotifier, NotificationState>(
   (ref) => NotificationNotifier(
     getListNotificationsUC: ref.watch(_getListNotificationsProvider),
-  ).._getListNotificationsUC(),
+  )..getListNotificationsUC(),
 );

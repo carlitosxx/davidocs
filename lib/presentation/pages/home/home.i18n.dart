@@ -18,6 +18,12 @@ const kNotification = 'kNotification';
 const kPendingSign = 'kPendingSign';
 const kFilterDocument = 'kFilterDocument';
 const kDocumentsPendingMessage = 'kDocumentsPendingMessage';
+const kDoYouHaveDocument = 'kDoYouHaveDocument';
+const kMessageNotification = 'kMessageNotification';
+const kAvailableFrom = 'kAvailableFrom';
+const kTheBusiness = 'kTheBusiness';
+const kSend = 'kSend';
+const kCorrespondingTo = 'kCorrespondingTo';
 
 extension HomeStrings on String {
   static const _t = Translations.from("en_us", {
@@ -92,6 +98,30 @@ extension HomeStrings on String {
     kDocumentsPendingMessage: {
       "en_us": "You have documents pending signature: ",
       "es_es": "Usted tiene documentos pendientes de firma: ",
+    },
+    kDoYouHaveDocument: {
+      "en_us": "Do you have a new electronic document.",
+      "es_es": "Tiene un nuevo documento electronico.",
+    },
+    kMessageNotification: {
+      "en_us": "Do you have a new electronic document. ",
+      "es_es": "La empresa %s le envió su %s, correspondiente al periodo %s.",
+    },
+    kAvailableFrom: {
+      "en_us": "Do you have a new electronic document. ",
+      "es_es": "Disponible desde el ",
+    },
+    kTheBusiness: {
+      "en_us": "The business ",
+      "es_es": "La Empresa ",
+    },
+    kSend: {
+      "en_us": "he sent his ",
+      "es_es": " le envió su ",
+    },
+    kCorrespondingTo: {
+      "en_us": "corresponding to the period",
+      "es_es": ", correspondiente al periodo ",
     }
   });
 
