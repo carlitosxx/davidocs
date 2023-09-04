@@ -10,8 +10,10 @@ import 'package:davidocs/domain/usecases/get_download_file.usecase.dart';
 import 'package:davidocs/domain/usecases/get_list_business.usecase.dart';
 import 'package:davidocs/domain/usecases/get_list_documents.usecase.dart';
 import 'package:davidocs/domain/usecases/get_list_documents_type.usecase.dart';
+import 'package:davidocs/domain/usecases/get_list_notifications.usecase.dart';
 import 'package:davidocs/presentation/pages/home/providers/document_detail/document_detail_state.dart';
 import 'package:davidocs/presentation/pages/home/providers/download/download_state.dart';
+import 'package:davidocs/presentation/pages/home/providers/notification/notification_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,6 +30,7 @@ part 'document_type/document_type_notifier.dart';
 part 'document/document_notifier.dart';
 part 'document_detail/document_detail_notifier.dart';
 part 'download/download_notifier.dart';
+part 'notification/notification_notifier.dart';
 // * repositories Inject
 
 final _businessRepositoryProvider = Provider<IDocumentsRepository>(
@@ -73,6 +76,13 @@ final _getDownloadFileUCProvider = Provider<GetDownloadFileUC>(
   },
 );
 
+final _getListNotificationsProvider = Provider<GetListNotificationsUC>(
+  (ref) {
+    final repository = ref.watch(_businessRepositoryProvider);
+    return GetListNotificationsUC(repository);
+  },
+);
+
 //* Provider
 final listBusinessProvider =
     StateNotifierProvider<BusinessNotifier, BusinessState>(
@@ -104,5 +114,13 @@ final documentDetailProvider =
 
 final downloadProvider = StateNotifierProvider<DownloadNotifier, DownloadState>(
   (ref) => DownloadNotifier(
-      getDownloadFileUC: ref.watch(_getDownloadFileUCProvider)),
+    getDownloadFileUC: ref.watch(_getDownloadFileUCProvider),
+  ),
+);
+
+final listNotificationsProvider =
+    StateNotifierProvider<NotificationNotifier, NotificationState>(
+  (ref) => NotificationNotifier(
+    getListNotificationsUC: ref.watch(_getListNotificationsProvider),
+  ).._getListNotificationsUC(),
 );
