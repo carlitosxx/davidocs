@@ -36,7 +36,7 @@ typedef DownloadOrFailure = Future<Either<HttpRequestFailure, DownloadEntity>>;
 typedef ListNotificationsOrFailure
     = Future<Either<HttpRequestFailure, ResponseListNotificationsEntity>>;
 typedef ServiceAndPermissionOrFailure
-    = Future<Either<LocalRequestFailure, bool>>;
+    = Future<Either<LocalRequestFailure, Map<String, dynamic>>>;
 
 abstract class IDocumentsRepository {
   DataOrFailure getListDocumentsPending();

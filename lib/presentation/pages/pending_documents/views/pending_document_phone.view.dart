@@ -149,7 +149,6 @@ class PendingDocumentPhoneViewState
                 //* reject
                 ref.read(isLoadingProvider.notifier).update((state) => false);
                 LocationPermission permission;
-
                 bool serviceEnabled =
                     await Geolocator.isLocationServiceEnabled();
                 if (!serviceEnabled) {
