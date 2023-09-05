@@ -38,7 +38,7 @@ class AuthRepositoryImpl implements IAuthRepository {
         );
       }
     } catch (e) {
-      print(e);
+      // print(e);
       return Either.left(
         HttpRequestFailure.network(),
       );

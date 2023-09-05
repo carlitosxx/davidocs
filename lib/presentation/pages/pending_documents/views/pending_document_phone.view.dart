@@ -1,20 +1,16 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:davidocs/presentation/pages/auth/providers/get_signin/get_signin_provider.dart';
+// import 'package:davidocs/presentation/pages/auth/providers/get_signin/get_signin_provider.dart';
 import 'package:davidocs/presentation/pages/pending_documents/pending_documents.i18n.dart';
-import 'package:davidocs/presentation/pages/pending_documents/providers/document_provider.dart';
 import 'package:davidocs/presentation/pages/pending_documents/providers/pending_documents_provider.dart';
 import 'package:davidocs/presentation/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geolocator/geolocator.dart';
 
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:device_info_plus/device_info_plus.dart';
+
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-import 'package:dart_ipify/dart_ipify.dart';
 
 class PendingDocumentPhoneView extends ConsumerStatefulWidget {
   const PendingDocumentPhoneView({super.key, required this.documentID});
@@ -27,41 +23,386 @@ class PendingDocumentPhoneView extends ConsumerStatefulWidget {
 
 class PendingDocumentPhoneViewState
     extends ConsumerState<PendingDocumentPhoneView> {
-  String ipPublic = '';
-  final TextEditingController reason = TextEditingController();
-  @override
-  void initState() {
-    super.initState();
-    loadIpv4();
-  }
-
+  Map<String, dynamic> responseGpsSign = {};
+  TextEditingController reason = TextEditingController();
+  TextEditingController pinOtp = TextEditingController();
   @override
   void dispose() {
     reason.dispose();
     super.dispose();
   }
 
-  loadIpv4() async {
-    final ipv4 = await Ipify.ipv4();
-    ipPublic = ipv4;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final isLoadingButtonReject = ref.watch(isLoadingProvider);
     final pendingDocumentState = ref.watch(pendingDocumentNotifierProvider);
     final sendPendingDocumentState =
         ref.watch(sendPendingDocumentNotifierProvider);
+    final gpsState = ref.watch(validateGpsNotifierProvider);
+    final gpsSignState = ref.watch(validateGpsSignNotifierProvider);
 
+    /// Rechazar -> state=data
     ref.listen(
       rejectNotifierProvider.select((value) => value),
       ((prev, next) {
         next.whenOrNull(data: (responseRejectEntity) {
           ref.read(appRouterProvider).pop();
+          ref
+              .read(pendingDocumentsNotifierProvider.notifier)
+              .getListDocumentsPending();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      kMessageRefused.i18n,
+                      softWrap: true,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
           ref.read(appRouterProvider).goNamed('home');
         });
       }),
     );
+
+    /// Firmar -> state=data
+    ref.listen(
+      sendPinNotifierProvider.select((value) => value),
+      ((prev, next) {
+        next.whenOrNull(data: (responseSendPinEntity) {
+          ref.read(appRouterProvider).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      kMessageSignined.i18n,
+                      softWrap: true,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+          ref
+              .read(pendingDocumentsNotifierProvider.notifier)
+              .getListDocumentsPending();
+          ref.read(appRouterProvider).goNamed('home');
+        });
+      }),
+    );
+
+    /// Validar GPS del boton firmar
+    ref.listen(
+      validateGpsSignNotifierProvider.select((value) => value),
+      ((prev, next) {
+        next.whenOrNull(
+          error: (message) => showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(kTitleDialogReject.i18n),
+                content: Text(message ?? 'error desconocido'),
+                actions: <Widget>[
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      textStyle: Theme.of(context).textTheme.labelLarge,
+                    ),
+                    child: Text(kClose.i18n),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          ),
+          data: (response) {
+            ref
+                .read(sendPendingDocumentNotifierProvider.notifier)
+                .sendDocumentPending(widget.documentID);
+            responseGpsSign = response;
+          },
+        );
+      }),
+    );
+
+    /// Envio de codigo OTP
+    ref.listen(
+      sendPendingDocumentNotifierProvider.select((value) => value),
+      ((prev, next) {
+        next.whenOrNull(
+          error: (message) => showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(kTitleDialogReject.i18n),
+                content: Text(message ?? 'error desconocido'),
+                actions: <Widget>[
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      textStyle: Theme.of(context).textTheme.labelLarge,
+                    ),
+                    child: Text(kClose.i18n),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          ),
+          data: (response) {
+            return showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return Consumer(builder:
+                    (BuildContext context, WidgetRef widgetRef, Widget? child) {
+                  final state = widgetRef.watch(sendPinNotifierProvider);
+
+                  return AlertDialog(
+                    title: Text(kTitleShowDialog.i18n,
+                        textAlign: TextAlign.center),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          response.datos,
+                          textAlign: TextAlign.center,
+                        ),
+                        Text(
+                          kMessageShowDialog.i18n,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onBackground
+                                .withOpacity(.1),
+                          ),
+                          child: TextField(
+                            controller: pinOtp,
+                            style: TextStyle(
+                                color:
+                                    Theme.of(context).colorScheme.onBackground),
+                            maxLength: 6,
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            decoration: InputDecoration(
+                              counterText: '',
+                              border: InputBorder.none,
+                              hintText: kHintEnterPin.i18n,
+                              hintStyle: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onBackground
+                                    .withOpacity(0.3),
+                              ),
+                            ),
+                          ),
+                        ),
+                        state.maybeWhen(
+                          orElse: () => const SizedBox.shrink(),
+                          error: (value) => Text(
+                            value ?? 'ocurrio un error desconocido',
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.error),
+                          ),
+                        ),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          textStyle: Theme.of(context).textTheme.labelLarge,
+                        ),
+                        child: Text(kClose.i18n),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      state.maybeMap(
+                        orElse: () => ElevatedButton(
+                          style: TextButton.styleFrom(
+                            textStyle: Theme.of(context).textTheme.labelLarge,
+                          ),
+                          child: Text(kSign.i18n),
+                          onPressed: () {
+                            ref.read(sendPinNotifierProvider.notifier).sendPin(
+                                  widget.documentID,
+                                  response.codigotoken,
+                                  pinOtp.text,
+                                  responseGpsSign['information'],
+                                  responseGpsSign['location']
+                                      .latitude
+                                      .toString(),
+                                  responseGpsSign['location']
+                                      .longitude
+                                      .toString(),
+                                );
+                          },
+                        ),
+                        loading: (v) => ElevatedButton(
+                          style: TextButton.styleFrom(
+                            textStyle: Theme.of(context).textTheme.labelLarge,
+                          ),
+                          onPressed: null,
+                          child: LoadingAnimationWidget.prograssiveDots(
+                              color: Theme.of(context).colorScheme.primary,
+                              size: 36),
+                        ),
+                      )
+                    ],
+                  );
+                });
+              },
+            );
+          },
+        );
+      }),
+    );
+
+    /// Validar Gps del boton rechazar
+    ref.listen(
+      validateGpsNotifierProvider.select((value) => value),
+      ((prev, next) {
+        next.whenOrNull(
+          error: (message) => showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(kTitleDialogReject.i18n),
+                content: Text(message ?? 'error desconocido'),
+                actions: <Widget>[
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      textStyle: Theme.of(context).textTheme.labelLarge,
+                    ),
+                    child: Text(kClose.i18n),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          ),
+          data: (response) => showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return Consumer(builder:
+                  (BuildContext context, WidgetRef widgetRef, Widget? child) {
+                final state = widgetRef.watch(rejectNotifierProvider);
+                return AlertDialog(
+                  title: Text(kTitleShowDialogReject.i18n,
+                      textAlign: TextAlign.center),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        kReason.i18n,
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onBackground
+                              .withOpacity(.1),
+                        ),
+                        child: TextField(
+                          controller: reason,
+                          style: TextStyle(
+                              color:
+                                  Theme.of(context).colorScheme.onBackground),
+                          textAlign: TextAlign.center,
+                          keyboardType: TextInputType.multiline,
+                          maxLines: 5,
+                          decoration: InputDecoration(
+                            counterText: '',
+                            border: InputBorder.none,
+                            hintText: kReasonDetail.i18n,
+                            hintStyle: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onBackground
+                                  .withOpacity(0.3),
+                            ),
+                          ),
+                        ),
+                      ),
+                      state.maybeWhen(
+                        orElse: () => const SizedBox.shrink(),
+                        error: (value) => Text(
+                            value ?? 'ocurrio un error desconocido',
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.error)),
+                      )
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        textStyle: Theme.of(context).textTheme.labelLarge,
+                      ),
+                      child: Text(kClose.i18n),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    state.maybeMap(
+                      orElse: () => ElevatedButton(
+                        style: TextButton.styleFrom(
+                          textStyle: Theme.of(context).textTheme.labelLarge,
+                        ),
+                        child: Text(kReject.i18n),
+                        onPressed: () {
+                          ref
+                              .read(rejectNotifierProvider.notifier)
+                              .rejectDocument(
+                                  widget.documentID,
+                                  reason.text,
+                                  response['information'],
+                                  response['location'].latitude.toString(),
+                                  response['location'].longitude.toString());
+                        },
+                      ),
+                      loading: (v) => ElevatedButton(
+                        style: TextButton.styleFrom(
+                          textStyle: Theme.of(context).textTheme.labelLarge,
+                        ),
+                        onPressed: null,
+                        child: LoadingAnimationWidget.prograssiveDots(
+                            color: Theme.of(context).colorScheme.primary,
+                            size: 36),
+                      ),
+                    )
+                  ],
+                );
+              });
+            },
+          ),
+        );
+      }),
+    );
+
     return Scaffold(
       appBar: AppBar(
         title: Text(kDocumentPreview.i18n),
@@ -89,475 +430,51 @@ class PendingDocumentPhoneViewState
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            sendPendingDocumentState.maybeMap(
-              orElse: () => ElevatedButton(
-                onPressed: () async {
-                  ref
-                      .read(sendPendingDocumentNotifierProvider.notifier)
-                      .sendDocumentPending(widget.documentID);
-                  LocationPermission permission;
-
-                  bool serviceEnabled =
-                      await Geolocator.isLocationServiceEnabled();
-                  if (!serviceEnabled) {
-                    print('El servicio de ubicacion esta desabilitado 1');
-                    // throw GenericTextException("Error: El servicio de ubicacion esta desabilitado");
-                  }
-
-                  permission = await Geolocator.checkPermission();
-
-                  if (permission == LocationPermission.denied ||
-                      permission == LocationPermission.deniedForever) {
-                    permission = await Geolocator.requestPermission();
-
-                    if (permission == LocationPermission.denied ||
-                        permission == LocationPermission.deniedForever) {
-                      print('El servicio de ubicacion esta desabilitado 2');
-                      // throw GenericTextException("Error: Debe activar los permisos de ubicación");
-                    }
-                  }
-                  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-                  String network = '';
-                  for (var interface in await NetworkInterface.list()) {
-                    network += '== Interface: ${interface.name} ==';
-                    for (var addr in interface.addresses) {
-                      network +=
-                          "<${addr.address}|${addr.host}|${addr.isLoopback}|${addr.type.name}>";
-                    }
-                  }
-
-                  final androidDeviceInfo = await deviceInfo.androidInfo;
-                  final String information =
-                      "App DaviDocs versión 2.0 con sistema operativo [ Android ${androidDeviceInfo.version.release} API Level ${androidDeviceInfo.version.sdkInt}] - IpPublica [$ipPublic] - RedLocal [$network] Mac: [unknown] Model: ${androidDeviceInfo.model}";
-
-                  // ignore: use_build_context_synchronously
-                  _dialogSignBuilder(context, ref, information);
-                },
-                child: Text(kSign.i18n),
+            /// BOTON FIRMAR
+            sendPendingDocumentState.maybeWhen(
+              orElse: () => gpsSignState.maybeWhen(
+                orElse: () => ElevatedButton(
+                  onPressed: () {
+                    ref
+                        .read(validateGpsSignNotifierProvider.notifier)
+                        .validateGps();
+                  },
+                  child: Text(kSign.i18n),
+                ),
+                loading: () => ElevatedButton(
+                  onPressed: null,
+                  child: LoadingAnimationWidget.prograssiveDots(
+                      color: Theme.of(context).colorScheme.primary, size: 36),
+                ),
               ),
-              loading: (value) => ElevatedButton(
+              loading: () => ElevatedButton(
                 onPressed: null,
                 child: LoadingAnimationWidget.prograssiveDots(
                     color: Theme.of(context).colorScheme.primary, size: 36),
               ),
             ),
+
             const SizedBox(
               width: 16,
             ),
-            OutlinedButton(
-              onPressed: () async {
-                //* reject
-                ref.read(isLoadingProvider.notifier).update((state) => false);
-                LocationPermission permission;
-                bool serviceEnabled =
-                    await Geolocator.isLocationServiceEnabled();
-                if (!serviceEnabled) {
-                  //* Envia dialog para habilitar GPS
-                  ref.read(isLoadingProvider.notifier).update((state) => true);
-                  // ignore: use_build_context_synchronously
-                  return showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text(kTitleDialogReject.i18n),
-                        content: Text(
-                          kcontentMessageGps.i18n,
-                          textAlign: TextAlign.center,
-                        ),
-                        actions: <Widget>[
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              textStyle: Theme.of(context).textTheme.labelLarge,
-                            ),
-                            child: const Text('cerrar'),
-                            onPressed: () {
-                              ref.read(appRouterProvider).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                  // throw GenericTextException("Error: El servicio de ubicacion esta desabilitado");
-                }
 
-                permission = await Geolocator.checkPermission();
-
-                if (permission == LocationPermission.denied ||
-                    permission == LocationPermission.deniedForever) {
-                  permission = await Geolocator.requestPermission();
-
-                  if (permission == LocationPermission.denied ||
-                      permission == LocationPermission.deniedForever) {
-                    ref
-                        .read(isLoadingProvider.notifier)
-                        .update((state) => true);
-                    // ignore: use_build_context_synchronously
-                    return showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text(kTitleDialogReject.i18n),
-                          content: Text(
-                            kContentMessageReject.i18n,
-                            textAlign: TextAlign.center,
-                          ),
-                          actions: <Widget>[
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                textStyle:
-                                    Theme.of(context).textTheme.labelLarge,
-                              ),
-                              child: const Text('cerrar'),
-                              onPressed: () {
-                                ref.read(appRouterProvider).pop();
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  } else {
-                    final location = await Geolocator.getCurrentPosition(
-                        desiredAccuracy: LocationAccuracy.high);
-                    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-                    String network = '';
-                    for (var interface in await NetworkInterface.list()) {
-                      network += '== Interface: ${interface.name} ==';
-                      for (var addr in interface.addresses) {
-                        network +=
-                            "<${addr.address}|${addr.host}|${addr.isLoopback}|${addr.type.name}>";
-                      }
-                    }
-
-                    final androidDeviceInfo = await deviceInfo.androidInfo;
-                    final String information =
-                        "App DaviDocs versión 2.0 con sistema operativo [ Android ${androidDeviceInfo.version.release} API Level ${androidDeviceInfo.version.sdkInt}] - IpPublica [$ipPublic] - RedLocal [$network] Mac: [unknown] Model: ${androidDeviceInfo.model}";
-                    ref
-                        .read(isLoadingProvider.notifier)
-                        .update((state) => true);
-// ignore: use_build_context_synchronously
-                    showDialog<void>(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Consumer(builder: (BuildContext context,
-                            WidgetRef widgetRef, Widget? child) {
-                          final state = widgetRef.watch(rejectNotifierProvider);
-                          return AlertDialog(
-                            title: Text(kTitleShowDialogReject.i18n,
-                                textAlign: TextAlign.center),
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  kReason.i18n,
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onBackground
-                                        .withOpacity(.1),
-                                  ),
-                                  child: TextField(
-                                    controller: reason,
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onBackground),
-                                    textAlign: TextAlign.center,
-                                    keyboardType: TextInputType.multiline,
-                                    maxLines: 5,
-                                    decoration: InputDecoration(
-                                      counterText: '',
-                                      border: InputBorder.none,
-                                      hintText: kReasonDetail.i18n,
-                                      hintStyle: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onBackground
-                                            .withOpacity(0.3),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                state.maybeWhen(
-                                  orElse: () => const SizedBox.shrink(),
-                                  error: (value) => Text(
-                                      value ?? 'ocurrio un error desconocido',
-                                      style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .error)),
-                                )
-                              ],
-                            ),
-                            actions: [
-                              TextButton(
-                                style: TextButton.styleFrom(
-                                  textStyle:
-                                      Theme.of(context).textTheme.labelLarge,
-                                ),
-                                child: Text(kClose.i18n),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                              state.maybeMap(
-                                orElse: () => ElevatedButton(
-                                  style: TextButton.styleFrom(
-                                    textStyle:
-                                        Theme.of(context).textTheme.labelLarge,
-                                  ),
-                                  child: Text(kReject.i18n),
-                                  onPressed: () {
-                                    ref
-                                        .read(rejectNotifierProvider.notifier)
-                                        .rejectDocument(
-                                            widget.documentID,
-                                            reason.text,
-                                            information,
-                                            location.latitude.toString(),
-                                            location.longitude.toString());
-                                  },
-                                ),
-                                loading: (v) => ElevatedButton(
-                                  style: TextButton.styleFrom(
-                                    textStyle:
-                                        Theme.of(context).textTheme.labelLarge,
-                                  ),
-                                  onPressed: null,
-                                  child: LoadingAnimationWidget.prograssiveDots(
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
-                                      size: 36),
-                                ),
-                              )
-                            ],
-                          );
-                        });
-                      },
-                    );
-                  }
-                } else {
-                  final location = await Geolocator.getCurrentPosition(
-                      desiredAccuracy: LocationAccuracy.high);
-                  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-                  String network = '';
-                  for (var interface in await NetworkInterface.list()) {
-                    network += '== Interface: ${interface.name} ==';
-                    for (var addr in interface.addresses) {
-                      network +=
-                          "<${addr.address}|${addr.host}|${addr.isLoopback}|${addr.type.name}>";
-                    }
-                  }
-
-                  final androidDeviceInfo = await deviceInfo.androidInfo;
-                  final String information =
-                      "App DaviDocs versión 2.0 con sistema operativo [ Android ${androidDeviceInfo.version.release} API Level ${androidDeviceInfo.version.sdkInt}] - IpPublica [$ipPublic] - RedLocal [$network] Mac: [unknown] Model: ${androidDeviceInfo.model}";
-                  ref.read(isLoadingProvider.notifier).update((state) => true);
-// ignore: use_build_context_synchronously
-                  showDialog<void>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return Consumer(builder: (BuildContext context,
-                          WidgetRef widgetRef, Widget? child) {
-                        final state = widgetRef.watch(rejectNotifierProvider);
-                        return AlertDialog(
-                          title: Text(kTitleShowDialogReject.i18n,
-                              textAlign: TextAlign.center),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                kReason.i18n,
-                              ),
-                              const SizedBox(
-                                height: 8,
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground
-                                      .withOpacity(.1),
-                                ),
-                                child: TextField(
-                                  controller: reason,
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onBackground),
-                                  textAlign: TextAlign.center,
-                                  keyboardType: TextInputType.multiline,
-                                  maxLines: 5,
-                                  decoration: InputDecoration(
-                                    counterText: '',
-                                    border: InputBorder.none,
-                                    hintText: kReasonDetail.i18n,
-                                    hintStyle: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onBackground
-                                          .withOpacity(0.3),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              state.maybeWhen(
-                                orElse: () => const SizedBox.shrink(),
-                                error: (value) => Text(
-                                    value ?? 'ocurrio un error desconocido',
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .error)),
-                              )
-                            ],
-                          ),
-                          actions: [
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                textStyle:
-                                    Theme.of(context).textTheme.labelLarge,
-                              ),
-                              child: Text(kClose.i18n),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                            state.maybeMap(
-                              orElse: () => ElevatedButton(
-                                style: TextButton.styleFrom(
-                                  textStyle:
-                                      Theme.of(context).textTheme.labelLarge,
-                                ),
-                                child: Text(kReject.i18n),
-                                onPressed: () {
-                                  ref
-                                      .read(rejectNotifierProvider.notifier)
-                                      .rejectDocument(
-                                          widget.documentID,
-                                          reason.text,
-                                          information,
-                                          location.latitude.toString(),
-                                          location.longitude.toString());
-                                },
-                              ),
-                              loading: (v) => ElevatedButton(
-                                style: TextButton.styleFrom(
-                                  textStyle:
-                                      Theme.of(context).textTheme.labelLarge,
-                                ),
-                                onPressed: null,
-                                child: LoadingAnimationWidget.prograssiveDots(
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                    size: 36),
-                              ),
-                            )
-                          ],
-                        );
-                      });
-                    },
-                  );
-                }
-              },
-              child: isLoadingButtonReject
-                  ? Text(kReject.i18n)
-                  : LoadingAnimationWidget.prograssiveDots(
-                      color: Theme.of(context).colorScheme.primary, size: 36),
+            /// BOTON RECHAZAR
+            gpsState.maybeWhen(
+              orElse: () => OutlinedButton(
+                onPressed: () {
+                  ref.read(validateGpsNotifierProvider.notifier).validateGps();
+                },
+                child: Text(kReject.i18n),
+              ),
+              loading: () => OutlinedButton(
+                onPressed: null,
+                child: LoadingAnimationWidget.prograssiveDots(
+                    color: Theme.of(context).colorScheme.primary, size: 36),
+              ),
             ),
           ],
         ),
       ),
     );
   }
-}
-
-Future<void> _dialogSignBuilder(
-    BuildContext context, WidgetRef ref, String information) {
-  return showDialog<void>(
-    context: context,
-    builder: (BuildContext context) {
-      final user = ref.watch(signinNotifierProvider);
-      final String email = user.whenOrNull(
-            data: (responseSigninEntity) => responseSigninEntity.correo,
-          ) ??
-          '';
-      final String phoneNumber = user.whenOrNull(
-            data: (responseSigninEntity) => responseSigninEntity.celular,
-          ) ??
-          '';
-      return AlertDialog(
-        title: Text(kTitleShowDialog.i18n, textAlign: TextAlign.center),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              kMessageShowDialog.i18n.fill([email, phoneNumber]),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onBackground
-                      .withOpacity(.1),
-                ),
-                child: TextField(
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.onBackground),
-                  maxLength: 6,
-                  textAlign: TextAlign.center,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  decoration: InputDecoration(
-                    counterText: '',
-                    border: InputBorder.none,
-                    hintText: kHintEnterPin.i18n,
-                    hintStyle: TextStyle(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onBackground
-                          .withOpacity(0.3),
-                    ),
-                  ),
-                ))
-          ],
-        ),
-        actions: [
-          TextButton(
-            style: TextButton.styleFrom(
-              textStyle: Theme.of(context).textTheme.labelLarge,
-            ),
-            child: Text(kClose.i18n),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          ElevatedButton(
-            style: TextButton.styleFrom(
-              textStyle: Theme.of(context).textTheme.labelLarge,
-            ),
-            child: Text(kSign.i18n),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      );
-    },
-  );
 }

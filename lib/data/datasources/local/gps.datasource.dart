@@ -17,7 +17,7 @@ class GpsDataSourceImpl implements IGpsDataSource {
     LocationPermission permission;
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      Either.left(
+      return Either.left(
         LocalRequestFailure.gpsNotEnabled(),
       );
     }
@@ -27,7 +27,7 @@ class GpsDataSourceImpl implements IGpsDataSource {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied ||
           permission == LocationPermission.deniedForever) {
-        Either.left(
+        return Either.left(
           LocalRequestFailure.gpsNotPermission(),
         );
       } else {
@@ -57,6 +57,7 @@ class GpsDataSourceImpl implements IGpsDataSource {
     } else {
       final location = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
+
       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
       String network = '';
       for (var interface in await NetworkInterface.list()) {
@@ -78,6 +79,5 @@ class GpsDataSourceImpl implements IGpsDataSource {
       };
       return Either.right(response);
     }
-    return Either.left(LocalRequestFailure.failureUnknown());
   }
 }

@@ -87,7 +87,7 @@ class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
       String latitud,
       String longitud) async {
     try {
-      String url = '${Environment.apiUrl}ver_documento_pendiente';
+      String url = '${Environment.apiUrl}validar_pin';
       dio.interceptors.add(DioInterceptor());
       final Map<String, dynamic> data = {
         'codigodocumentopendiente': codigodocumentopendiente,
@@ -99,11 +99,18 @@ class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
       };
       final response = await dio.post(url, data: data);
       if (response.statusCode == 200) {
+        if (response.data['error'] == false) {
+          final result = ResponseSendPinModel();
+          return Either.right(
+            result,
+          );
+        } else {
+          final badRequestModel = BadRequestModel.fromJson(response.data);
+          return Either.left(
+            HttpRequestFailure.badRequest(badRequestModel),
+          );
+        }
         // final result = ResponseSendPinModel.fromJson(response.data);
-        final result = ResponseSendPinModel();
-        return Either.right(
-          result,
-        );
       } else if (response.statusCode == 401) {
         return Either.left(
           HttpRequestFailure.unauthorized(),
@@ -239,7 +246,7 @@ class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
         catchDioError(e),
       );
     } catch (e) {
-      print(e);
+      // print(e);
       return Either.left(
         HttpRequestFailure.server(),
       );
@@ -402,7 +409,7 @@ class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
         catchDioError(e),
       );
     } catch (e) {
-      print(e);
+      // print(e);
       return Either.left(
         HttpRequestFailure.server(),
       );

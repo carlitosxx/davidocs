@@ -73,7 +73,7 @@ class DocumentsRepositoryImpl implements IDocumentsRepository {
     if (connectivityResult == ConnectivityResult.mobile ||
         connectivityResult == ConnectivityResult.wifi) {
       return _iDocumentPendingDataSource.sendPin(codigodocumentopendiente,
-          codigotoken, infoequipo, latitud, longitud, pinfirma);
+          codigotoken, pinfirma, infoequipo, latitud, longitud);
     } else {
       return Either.left(
         HttpRequestFailure.network(),

@@ -17,7 +17,9 @@ const kReason = 'kReason';
 const kReasonDetail = 'kReasonDetail';
 const kTitleDialogReject = 'kTitleDialogReject';
 const kContentMessageReject = 'kContentMessageReject';
-const kcontentMessageGps = 'kcontentMessageGps';
+const kContentMessageGps = 'kContentMessageGps';
+const kMessageRefused = 'kMessageRefused';
+const kMessageSignined = 'kMessageSignined';
 
 extension PendingDocumentsStrings on String {
   static const _t = Translations.from("en_us", {
@@ -45,15 +47,24 @@ extension PendingDocumentsStrings on String {
       "en_us": "Reject",
       "es_es": "Rechazar",
     },
+    kMessageRefused: {
+      "en_us": "The document was successfully rejected",
+      "es_es": "Se rechazo con exito el documento",
+    },
+    kMessageSignined: {
+      "en_us": "The document was successfully signed",
+      "es_es": "Se firmo con exito el documento",
+    },
     // Show Dialogs
     kTitleShowDialog: {
       "en_us": "Send PIN code",
       "es_es": "Envio de codigo PIN",
     },
     kMessageShowDialog: {
-      "en_us": "Reject",
+      "en_us":
+          "By entering the PIN that was sent to you, you will accept and sign the document",
       "es_es":
-          "Se ha enviado un mensaje a su correo: %s y al celular %s al ingresar el PIN que se le envió, dará por aceptado y firmado el documento",
+          "Al ingresar el PIN que se le envió, dará por aceptado y firmado el documento",
     },
     kClose: {
       "en_us": "Close",
@@ -83,7 +94,7 @@ extension PendingDocumentsStrings on String {
       "en_us": "You must turn on location permissions",
       "es_es": "Debe activar los permisos de ubicación",
     },
-    kcontentMessageGps: {
+    kContentMessageGps: {
       "en_us": "Location service (GPS) is disabled",
       "es_es": "El servicio de ubicacion (GPS) esta desabilitado",
     }

@@ -9,10 +9,14 @@ import 'package:davidocs/domain/usecases/get_document_pending_by_id.usecase.dart
 import 'package:davidocs/domain/usecases/get_list_documents_pending.usecase.dart';
 import 'package:davidocs/domain/usecases/reject.usecase.dart';
 import 'package:davidocs/domain/usecases/send_document_pending.usecase.dart';
+import 'package:davidocs/domain/usecases/send_pin.usecase.dart';
+import 'package:davidocs/domain/usecases/validate_gps.usecase.dart';
+import 'package:davidocs/presentation/pages/pending_documents/providers/gps/gps_state.dart';
 import 'package:davidocs/presentation/pages/pending_documents/providers/pending_document/pending_document_state.dart';
 import 'package:davidocs/presentation/pages/pending_documents/providers/pending_documents/pending_documents_state.dart';
 import 'package:davidocs/presentation/pages/pending_documents/providers/reject/reject_state.dart';
 import 'package:davidocs/presentation/pages/pending_documents/providers/send_pending_document/send_pending_document.state.dart';
+import 'package:davidocs/presentation/pages/pending_documents/providers/send_pin/send_pin_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,6 +26,9 @@ part 'pending_documents/pending_documents_state_notifier.dart';
 part 'pending_document/pending_document_state_notifier.dart';
 part 'send_pending_document/send_pending_document_state_notifier.dart';
 part 'reject/reject_state_notifier.dart';
+part 'gps/gps_notifier.dart';
+part 'gps/gps_sign_notifier.dart';
+part 'send_pin/send_pin_notifier.dart';
 
 // * respositories Inject
 final _repositoryProvider = Provider<IDocumentsRepository>((_) {
@@ -64,6 +71,22 @@ final _useCaseRejectProvider = Provider<RejectUC>(
   },
 );
 
+/// Provider of use case validate gps
+final _useCaseGpsValidateProvider = Provider<ValidateGpsUC>(
+  (ref) {
+    final repository = ref.watch(_repositoryProvider);
+    return ValidateGpsUC(repository);
+  },
+);
+
+/// Provider of use case send pin
+final _useCaseSendPinProvider = Provider<SendPinUC>(
+  (ref) {
+    final repository = ref.watch(_repositoryProvider);
+    return SendPinUC(repository);
+  },
+);
+
 // * providers
 /// Provider of pending documents
 final pendingDocumentsNotifierProvider =
@@ -91,4 +114,22 @@ final sendPendingDocumentNotifierProvider =
 final rejectNotifierProvider =
     StateNotifierProvider<RejectNotifier, RejectState>(
   (ref) => RejectNotifier(rejectUC: ref.watch(_useCaseRejectProvider)),
+);
+final validateGpsNotifierProvider =
+    StateNotifierProvider<GpsNotifier, GpsState>(
+  (ref) => GpsNotifier(
+    validateGpsUC: ref.watch(_useCaseGpsValidateProvider),
+  ),
+);
+final validateGpsSignNotifierProvider =
+    StateNotifierProvider<GpsSignNotifier, GpsState>(
+  (ref) => GpsSignNotifier(
+    validateGpsUC: ref.watch(_useCaseGpsValidateProvider),
+  ),
+);
+final sendPinNotifierProvider =
+    StateNotifierProvider<SendPinNotifier, SendPinState>(
+  (ref) => SendPinNotifier(
+    sendPinUC: ref.watch(_useCaseSendPinProvider),
+  ),
 );

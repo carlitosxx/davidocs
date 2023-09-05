@@ -24,9 +24,19 @@ const kAvailableFrom = 'kAvailableFrom';
 const kTheBusiness = 'kTheBusiness';
 const kSend = 'kSend';
 const kCorrespondingTo = 'kCorrespondingTo';
+const kOpen = 'kOpen';
+const kDownloadedFile = 'kDownloadedFile';
 
 extension HomeStrings on String {
   static const _t = Translations.from("en_us", {
+    kOpen: {
+      "en_us": "Open",
+      "es_es": "Abrir",
+    },
+    kDownloadedFile: {
+      "en_us": "",
+      "es_es": "Se descargó el archivo %s",
+    },
     kBrand: {
       "en_us": "Davidocs",
       "es_es": "Davidocs",

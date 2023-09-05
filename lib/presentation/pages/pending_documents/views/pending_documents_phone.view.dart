@@ -107,6 +107,7 @@ class PendingDocumentsPhoneViewState
                         final item = filter[index];
                         return GestureDetector(
                           onTap: () {
+                            // print(item.codigodocumentopendiente);
                             ref
                                 .read(pendingDocumentNotifierProvider.notifier)
                                 .getDocumentPendingByID(
@@ -170,6 +171,7 @@ class PendingDocumentsPhoneViewState
                       final item = documentsPending.datos[index];
                       return GestureDetector(
                         onTap: () {
+                          // print(item.codigodocumentopendiente);
                           ref
                               .read(pendingDocumentNotifierProvider.notifier)
                               .getDocumentPendingByID(

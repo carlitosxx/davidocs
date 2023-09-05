@@ -46,24 +46,28 @@ class DocumentDetailPhoneView extends ConsumerWidget {
             await file.writeAsBytes(bytes.buffer.asInt8List());
 
             // ignore: use_build_context_synchronously
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      "Se descargó el archivo ${downloadEntity.datos.documento.filename}",
-                      softWrap: true,
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        kDownloadedFile.i18n
+                            .fill([downloadEntity.datos.documento.filename]),
+                        // "Se descargó el archivo ${downloadEntity.datos.documento.filename}",
+                        softWrap: true,
+                      ),
                     ),
-                  ),
-                  TextButton(
-                      onPressed: () {
-                        OpenFile.open(
-                            "$path/${downloadEntity.datos.documento.filename}");
-                      },
-                      child: Text("ABRIR"))
-                ],
+                    TextButton(
+                        onPressed: () {
+                          OpenFile.open(
+                              "$path/${downloadEntity.datos.documento.filename}");
+                        },
+                        child: Text(kOpen.i18n))
+                  ],
+                ),
               ),
-            ));
+            );
           },
         );
       }),
