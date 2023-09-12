@@ -1,6 +1,6 @@
 import 'package:davidocs/core/errors/http_request.error.dart';
 import 'package:davidocs/core/utils/either.util.dart';
-import 'package:davidocs/data/datasources/local/save_token.datasource.dart';
+import 'package:davidocs/data/datasources/local/shared_preferences.datasource.dart';
 import 'package:davidocs/data/datasources/remote/signin.datasource.dart';
 import 'package:davidocs/domain/entities/response_signin.entity.dart';
 import 'package:davidocs/domain/repositories/auth/auth.repository.dart';
@@ -8,15 +8,15 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 
 class AuthRepositoryImpl implements IAuthRepository {
   final ISigninDataSource _iSigninDataSource;
-  final ITokenDataSource _iTokenDataSource;
+  final ISharedPreferencesDataSource _iSharedPreferencesDataSource;
   AuthRepositoryImpl(
       {required ISigninDataSource iSigninDataSource,
-      required ITokenDataSource iTokenDataSource})
+      required ISharedPreferencesDataSource iSharedPreferencesDataSource})
       : _iSigninDataSource = iSigninDataSource,
-        _iTokenDataSource = iTokenDataSource;
+        _iSharedPreferencesDataSource = iSharedPreferencesDataSource;
 
   @override
-  DataOrFailure getSignin(String user, String password) async {
+  DataOrFailure getSignin(String user, String password, bool isRemember) async {
     try {
       final connectivityResult = await (Connectivity().checkConnectivity());
       if (connectivityResult == ConnectivityResult.mobile ||
@@ -27,7 +27,11 @@ class AuthRepositoryImpl implements IAuthRepository {
             await dataOrFailureFuture;
         dataOrFailure.whenOrNull(
           right: (value) async {
-            await _iTokenDataSource.saveTokenAndSubscriptionKey(
+            if (isRemember) {
+              await _iSharedPreferencesDataSource.rememberAccount(
+                  user, password);
+            }
+            await _iSharedPreferencesDataSource.saveTokenAndSubscriptionKey(
                 value.token ?? '', value.subscriptionKey);
           },
         );
@@ -43,5 +47,12 @@ class AuthRepositoryImpl implements IAuthRepository {
         HttpRequestFailure.network(),
       );
     }
+  }
+
+  @override
+  AccountOrFailure loadAccountRemembered() {
+    AccountOrFailure accountOrFailure =
+        _iSharedPreferencesDataSource.loadRememberedAccount();
+    return accountOrFailure;
   }
 }

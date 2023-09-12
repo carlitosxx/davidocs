@@ -1,5 +1,5 @@
 import 'package:davidocs/presentation/pages/auth/auth.i18n.dart';
-import 'package:davidocs/presentation/pages/auth/providers/get_signin/get_signin_provider.dart';
+import 'package:davidocs/presentation/pages/auth/providers/get_signin_provider.dart';
 import 'package:davidocs/presentation/pages/auth/providers/remember.provider.dart';
 import 'package:davidocs/presentation/pages/auth/providers/validation.provider.dart';
 import 'package:davidocs/presentation/routes/routes.dart';
@@ -33,6 +33,7 @@ class AuthPhoneviewState extends ConsumerState<AuthPhoneview> {
   Widget build(BuildContext context) {
     final isActiveRemember = ref.watch(rememberProvider);
     final isVisivilityValidationUser = ref.watch(visibilityValidationUser);
+    // final loadAccount = ref.watch(loadNotifierProvider);
     final isVisibilityValidationPassword =
         ref.watch(visibilityValidationPassword);
     final state = ref.watch(signinNotifierProvider);
@@ -41,7 +42,23 @@ class AuthPhoneviewState extends ConsumerState<AuthPhoneview> {
       ((previous, next) {
         next.whenOrNull(
           data: (responseSigninEntity) =>
-              ref.read(appRouterProvider).pushNamed('welcome'),
+              ref.read(appRouterProvider).pushReplacementNamed('welcome'),
+        );
+      }),
+    );
+
+    ref.listen(
+      loadNotifierProvider.select((value) => value),
+      ((previous, next) {
+        next.whenOrNull(
+          data: (response) {
+            print('pase por aqui jua');
+            user.text = response['user'] ?? '';
+            password.text = response['password'] ?? '';
+          },
+          initial: () {
+            print('initial');
+          },
         );
       }),
     );
@@ -163,6 +180,7 @@ class AuthPhoneviewState extends ConsumerState<AuthPhoneview> {
                                 Theme.of(context).colorScheme.secondary,
                             value: isActiveRemember,
                             onChanged: (newValue) {
+                              if (newValue == true) {}
                               ref
                                   .read(rememberProvider.notifier)
                                   .update((state) => !state);
@@ -218,10 +236,8 @@ class AuthPhoneviewState extends ConsumerState<AuthPhoneview> {
                           isVisivilityValidationUser == true)
                       ? null
                       : () {
-                          ref
-                              .read(signinNotifierProvider.notifier)
-                              .getSignin(user.text, password.text);
-                          // '41521195', "415211952023"
+                          ref.read(signinNotifierProvider.notifier).getSignin(
+                              user.text, password.text, isActiveRemember);
                         },
                 ),
                 loading: (value) => ElevatedButton(

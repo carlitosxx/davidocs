@@ -1,4 +1,4 @@
-import 'package:davidocs/presentation/pages/auth/providers/get_signin/get_signin_provider.dart';
+import 'package:davidocs/presentation/pages/auth/providers/get_signin_provider.dart';
 import 'package:davidocs/presentation/pages/welcome/welcome.i18n.dart';
 import 'package:davidocs/presentation/routes/routes.dart';
 import 'package:davidocs/presentation/widgets/button.widget.dart';

@@ -49,12 +49,12 @@ class SigninDataSourceImpl implements ISigninDataSource {
         );
       }
     } on DioException catch (e) {
-      // print(e);
+      print(e);
       return Either.left(
         catchDioError(e),
       );
     } catch (e) {
-      // print(e);
+      print(e);
       return Either.left(
         HttpRequestFailure.local(),
       );

@@ -1,4 +1,4 @@
-import 'package:davidocs/presentation/pages/auth/providers/get_signin/get_signin_provider.dart';
+import 'package:davidocs/presentation/pages/auth/providers/get_signin_provider.dart';
 import 'package:davidocs/presentation/pages/home/home.i18n.dart';
 import 'package:davidocs/presentation/pages/pending_documents/providers/pending_documents_provider.dart';
 import 'package:davidocs/presentation/routes/routes.dart';
@@ -82,7 +82,8 @@ class MyDrawer extends ConsumerWidget {
                     onTap: () {
                       ref.read(appRouterProvider).goNamed('home');
                     },
-                    child: Padding(
+                    child: Container(
+                      color: Colors.transparent,
                       padding: const EdgeInsets.only(left: 16, bottom: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -104,7 +105,8 @@ class MyDrawer extends ConsumerWidget {
                     onTap: () {
                       ref.read(appRouterProvider).goNamed('pending_documents');
                     },
-                    child: Padding(
+                    child: Container(
+                      color: Colors.transparent,
                       padding: const EdgeInsets.only(left: 16, bottom: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -162,7 +164,8 @@ class MyDrawer extends ConsumerWidget {
                     onTap: () {
                       ref.read(appRouterProvider).pushNamed('notification');
                     },
-                    child: Padding(
+                    child: Container(
+                      color: Colors.transparent,
                       padding: const EdgeInsets.only(left: 16, bottom: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -184,7 +187,8 @@ class MyDrawer extends ConsumerWidget {
                     onTap: () {
                       ref.read(appRouterProvider).pushNamed('welcome');
                     },
-                    child: Padding(
+                    child: Container(
+                      color: Colors.transparent,
                       padding: const EdgeInsets.only(left: 16, bottom: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -227,6 +231,10 @@ class MyDrawer extends ConsumerWidget {
                       Icons.logout,
                     ),
                     onTap: () {
+                      ref.read(loadNotifierProvider.notifier).reset();
+                      // ref
+                      //     .read(loadNotifierProvider.notifier)
+                      //     .loadAccountRemembered();
                       ref.read(appRouterProvider).pushReplacementNamed('auth');
                     },
                   ),

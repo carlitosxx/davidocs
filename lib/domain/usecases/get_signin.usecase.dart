@@ -5,7 +5,10 @@ class GetSigninUC {
 
   final IAuthRepository authRepository;
 
-  DataOrFailure call({required String user, required String password}) async {
-    return authRepository.getSignin(user, password);
+  DataOrFailure call(
+      {required String user,
+      required String password,
+      required bool isRemember}) async {
+    return authRepository.getSignin(user, password, isRemember);
   }
 }
