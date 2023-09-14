@@ -85,7 +85,10 @@ class DocumentPhoneViewState extends ConsumerState<DocumentPhoneView> {
                         (element) =>
                             element.detalledocumento.toLowerCase().contains(
                                   search.text.toLowerCase(),
-                                ),
+                                ) ||
+                            element.periodo
+                                .toLowerCase()
+                                .contains(search.text.toLowerCase()),
                       )
                       .toList();
                   return SliverList.builder(

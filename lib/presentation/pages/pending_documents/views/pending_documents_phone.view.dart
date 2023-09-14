@@ -99,6 +99,9 @@ class PendingDocumentsPhoneViewState
                           (element) =>
                               element.detalledocumento.toLowerCase().contains(
                                     search.text.toLowerCase(),
+                                  ) ||
+                              element.periodo.toLowerCase().contains(
+                                    search.text.toLowerCase(),
                                   ),
                         )
                         .toList();
@@ -107,7 +110,6 @@ class PendingDocumentsPhoneViewState
                         final item = filter[index];
                         return GestureDetector(
                           onTap: () {
-                            // print(item.codigodocumentopendiente);
                             ref
                                 .read(pendingDocumentNotifierProvider.notifier)
                                 .getDocumentPendingByID(

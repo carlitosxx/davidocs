@@ -407,23 +407,15 @@ class PendingDocumentPhoneViewState
       appBar: AppBar(
         title: Text(kDocumentPreview.i18n),
       ),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: pendingDocumentState.maybeWhen(
-              orElse: () => const Text('no encontrado'),
-              data: (value) {
-                Uint8List pdf = base64.decode(value.datos.documento.docPrevio);
-                return SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    child: SfPdfViewer.memory(pdf));
-              },
-              loading: () => const Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
-          )
-        ],
+      body: pendingDocumentState.maybeWhen(
+        orElse: () => const Text('no encontrado'),
+        data: (value) {
+          Uint8List pdf = base64.decode(value.datos.documento.docPrevio);
+          return SfPdfViewer.memory(pdf);
+        },
+        loading: () => const Center(
+          child: CircularProgressIndicator(),
+        ),
       ),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(24),
