@@ -100,7 +100,7 @@ class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
       final response = await dio.post(url, data: data);
       if (response.statusCode == 200) {
         if (response.data['error'] == false) {
-          final result = ResponseSendPinModel();
+          final result = ResponseSendPinModel.fromJson(response.data);
           return Either.right(
             result,
           );

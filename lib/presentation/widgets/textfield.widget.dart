@@ -51,12 +51,13 @@ class _TextfieldWidgetState extends State<TextfieldWidget> {
                   });
                 },
                 child: Icon(
-                  isOpen ? Icons.visibility : Icons.visibility_off,
+                  isOpen ? Icons.visibility_off : Icons.visibility,
                   color: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ),
           ),
+          // icono izquierda
           Visibility(
             visible: widget.hasIcon ?? false,
             child: Positioned(
@@ -69,33 +70,13 @@ class _TextfieldWidgetState extends State<TextfieldWidget> {
               ),
             ),
           ),
-          // Visibility(
-          //   visible: widget.isPhone ?? false,
-          //   child: Positioned(
-          //     right: 14,
-          //     top: 0,
-          //     child: DropdownButton(
-          //       underline: const SizedBox.shrink(),
-          //       value: 'pe',
-          //       icon: const SizedBox.shrink(),
-          //       onChanged: (value) {},
-          //       items: [
-          //         DropdownMenuItem(
-          //           value: 'pe',
-          //           child: SvgPicture.asset('assets/svg/countries/pe.svg',
-          //               alignment: Alignment.centerRight, width: 30),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 50),
             child: TextField(
               style:
                   TextStyle(color: Theme.of(context).colorScheme.onBackground),
               controller: widget.controller,
-              obscureText: !isOpen,
+              obscureText: (widget.isPassword) ? isOpen : !isOpen,
               maxLength: widget.maxLength ?? 15,
               keyboardType: widget.inputType,
               textAlign: TextAlign.start,

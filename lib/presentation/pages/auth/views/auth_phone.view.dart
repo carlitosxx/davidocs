@@ -52,12 +52,8 @@ class AuthPhoneviewState extends ConsumerState<AuthPhoneview> {
       ((previous, next) {
         next.whenOrNull(
           data: (response) {
-            print('pase por aqui jua');
             user.text = response['user'] ?? '';
             password.text = response['password'] ?? '';
-          },
-          initial: () {
-            print('initial');
           },
         );
       }),

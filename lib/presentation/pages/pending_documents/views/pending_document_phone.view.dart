@@ -74,24 +74,56 @@ class PendingDocumentPhoneViewState
       ((prev, next) {
         next.whenOrNull(data: (responseSendPinEntity) {
           ref.read(appRouterProvider).pop();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      kMessageSignined.i18n,
-                      softWrap: true,
+          ref.read(appRouterProvider).pop();
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.check_circle_outline_outlined,
+                      color: Colors.green,
                     ),
+                    Text('Documento fue firmado satisfactoriamente'),
+                  ],
+                ),
+                content: const Text(
+                    '''Su documento ha sido firmado exitosamente, en breve se le estará enviando su documento a su casilla electronica.
+                    Una vez finalizado el flujo de firma, recibirás una notificación informandole el estatus de su documento.'''),
+                actions: <Widget>[
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      textStyle: Theme.of(context).textTheme.labelLarge,
+                    ),
+                    child: Text(kClose.i18n),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
                   ),
                 ],
-              ),
-            ),
+              );
+            },
           );
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(
+          //     content: Row(
+          //       children: [
+          //         Expanded(
+          //           child: Text(
+          //             kMessageSignined.i18n,
+          //             softWrap: true,
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // );
           ref
               .read(pendingDocumentsNotifierProvider.notifier)
               .getListDocumentsPending();
-          ref.read(appRouterProvider).goNamed('home');
+          // ref.read(appRouterProvider).goNamed('home');
         });
       }),
     );
