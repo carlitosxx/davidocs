@@ -48,6 +48,18 @@ class PendingDocumentsPhoneViewState
   Widget build(BuildContext context) {
     final pendingDocumentsState = ref.watch(pendingDocumentsNotifierProvider);
     final isVisibleFilter = ref.watch(isSearchPendingDocumentsProvider);
+    ref.listen(
+      pendingDocumentsNotifierProvider.select((value) => value),
+      ((previous, next) {
+        next.whenOrNull(
+          error: (message) {
+            if (message == 'No estas autorizado') {
+              ref.read(appRouterProvider).goNamed('auth');
+            }
+          },
+        );
+      }),
+    );
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {

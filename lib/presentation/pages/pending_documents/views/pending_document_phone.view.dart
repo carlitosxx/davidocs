@@ -86,12 +86,17 @@ class PendingDocumentPhoneViewState
                       Icons.check_circle_outline_outlined,
                       color: Colors.green,
                     ),
-                    Text('Documento fue firmado satisfactoriamente'),
+                    Center(
+                        child: Text(
+                      'Documento firmado satisfactoriamente',
+                      textAlign: TextAlign.center,
+                    )),
                   ],
                 ),
                 content: const Text(
-                    '''Su documento ha sido firmado exitosamente, en breve se le estará enviando su documento a su casilla electronica.
-                    Una vez finalizado el flujo de firma, recibirás una notificación informandole el estatus de su documento.'''),
+                  'Su documento ha sido firmado exitosamente, en breve se le estará enviando su documento a su casilla electronica. Una vez finalizado el flujo de firma, recibirás una notificación informandole el estatus de su documento.',
+                  textAlign: TextAlign.center,
+                ),
                 actions: <Widget>[
                   TextButton(
                     style: TextButton.styleFrom(
