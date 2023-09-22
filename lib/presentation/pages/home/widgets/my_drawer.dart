@@ -1,5 +1,6 @@
 import 'package:davidocs/presentation/pages/auth/providers/get_signin_provider.dart';
 import 'package:davidocs/presentation/pages/home/home.i18n.dart';
+import 'package:davidocs/presentation/pages/home/providers/injects_provider.dart';
 import 'package:davidocs/presentation/pages/pending_documents/providers/pending_documents_provider.dart';
 import 'package:davidocs/presentation/routes/routes.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class MyDrawer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final signinState = ref.watch(signinNotifierProvider);
     final countPendingSign = ref.watch(pendingDocumentsNotifierProvider);
+    final listNotifications = ref.watch(listNotificationsProvider);
     return Drawer(
       child: Column(
         children: [
@@ -176,9 +178,46 @@ class MyDrawer extends ConsumerWidget {
                               color: Theme.of(context).colorScheme.onBackground,
                             ),
                           ),
-                          const Padding(
-                              padding: EdgeInsets.only(right: 16),
-                              child: Icon(Icons.notifications_outlined)),
+                          Stack(
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(right: 16),
+                                child: Icon(Icons.notifications_outlined),
+                              ),
+                              Positioned(
+                                top: 0,
+                                right: 10,
+                                child: Container(
+                                  height: 15,
+                                  width: 15,
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .primaryContainer,
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      listNotifications.maybeWhen(
+                                        orElse: () => '0',
+                                        data: (value) =>
+                                            value.numnotificaciones.toString(),
+                                      ),
+                                      style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimaryContainer,
+                                        fontSize: 8,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          // const Padding(
+                          //     padding: EdgeInsets.only(right: 16),
+                          //     child: Icon(Icons.notifications_outlined)),
                         ],
                       ),
                     ),

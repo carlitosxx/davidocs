@@ -71,6 +71,10 @@ class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
       } else {
         return Either.left(HttpRequestFailure.notFound());
       }
+    } on DioException catch (e) {
+      return Either.left(
+        catchDioError(e),
+      );
     } catch (e) {
       return Either.left(
         HttpRequestFailure.server(),
@@ -118,6 +122,10 @@ class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
       } else {
         return Either.left(HttpRequestFailure.notFound());
       }
+    } on DioException catch (e) {
+      return Either.left(
+        catchDioError(e),
+      );
     } catch (e) {
       return Either.left(
         HttpRequestFailure.server(),
@@ -161,6 +169,10 @@ class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
           HttpRequestFailure.notFound(),
         );
       }
+    } on DioException catch (e) {
+      return Either.left(
+        catchDioError(e),
+      );
     } catch (e) {
       return Either.left(
         HttpRequestFailure.local(),
@@ -194,6 +206,10 @@ class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
       } else {
         return Either.left(HttpRequestFailure.notFound());
       }
+    } on DioException catch (e) {
+      return Either.left(
+        catchDioError(e),
+      );
     } catch (e) {
       return Either.left(
         HttpRequestFailure.server(),
@@ -246,7 +262,6 @@ class DocumentPendingDatasourceImpl implements IDocumentPendingDataSource {
         catchDioError(e),
       );
     } catch (e) {
-      // print(e);
       return Either.left(
         HttpRequestFailure.server(),
       );

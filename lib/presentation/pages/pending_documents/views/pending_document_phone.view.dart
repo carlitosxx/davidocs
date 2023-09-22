@@ -40,6 +40,19 @@ class PendingDocumentPhoneViewState
     final gpsState = ref.watch(validateGpsNotifierProvider);
     final gpsSignState = ref.watch(validateGpsSignNotifierProvider);
 
+    ref.listen(
+      pendingDocumentNotifierProvider.select((value) => value),
+      ((previous, next) {
+        next.whenOrNull(
+          error: (message) {
+            if (message == 'No estas autorizado') {
+              ref.read(appRouterProvider).goNamed('auth');
+            }
+          },
+        );
+      }),
+    );
+
     /// Rechazar -> state=data
     ref.listen(
       rejectNotifierProvider.select((value) => value),
@@ -85,6 +98,7 @@ class PendingDocumentPhoneViewState
                     Icon(
                       Icons.check_circle_outline_outlined,
                       color: Colors.green,
+                      size: 48,
                     ),
                     Center(
                         child: Text(
@@ -446,6 +460,7 @@ class PendingDocumentPhoneViewState
       ),
       body: pendingDocumentState.maybeWhen(
         orElse: () => const Text('no encontrado'),
+        error: (s) => Text(s ?? 'error no encontrado'),
         data: (value) {
           Uint8List pdf = base64.decode(value.datos.documento.docPrevio);
           return SfPdfViewer.memory(pdf);
