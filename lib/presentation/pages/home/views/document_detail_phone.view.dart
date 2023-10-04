@@ -25,15 +25,18 @@ class DocumentDetailPhoneView extends ConsumerWidget {
       ((prev, next) {
         next.whenOrNull(
           data: (downloadEntity) async {
-            Directory? directory = Platform.isAndroid
-                ? await getExternalStorageDirectory()
-                : await getApplicationDocumentsDirectory();
-
+            Directory? directory =
+                //  Platform.isAndroid
+                //     ? await getExternalStorageDirectory()
+                //     :
+                await getApplicationSupportDirectory();
+            // await getApplicationDocumentsDirectory();
+            // Directory('/storage/emulated/0/Download');
             String path = "";
-            String download =
-                Platform.isAndroid ? "/../../../../Davidocs" : "/Files";
+            // String download =
+            //     Platform.isAndroid ? "/../../../../Davidocs" : "/Files";
 
-            if (directory != null) path = '${directory.path}$download';
+            if (directory != null) path = '${directory.path}';
             bool exist = await Directory(path).exists();
             if (!exist) {
               await Directory(path).create(recursive: true);
@@ -43,8 +46,9 @@ class DocumentDetailPhoneView extends ConsumerWidget {
             Uint8List bytes = base64.decode(imageb64);
             File file =
                 File("$path/${downloadEntity.datos.documento.filename}");
-            await file.writeAsBytes(bytes.buffer.asInt8List());
 
+            // await file.writeAsBytes(bytes.buffer.asInt8List());
+            file.writeAsBytesSync(bytes.buffer.asInt8List());
             // ignore: use_build_context_synchronously
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -59,8 +63,8 @@ class DocumentDetailPhoneView extends ConsumerWidget {
                       ),
                     ),
                     TextButton(
-                        onPressed: () {
-                          OpenFile.open(
+                        onPressed: () async {
+                          await OpenFile.open(
                               "$path/${downloadEntity.datos.documento.filename}");
                         },
                         child: Text(kOpen.i18n))
@@ -159,9 +163,7 @@ class DocumentDetailPhoneView extends ConsumerWidget {
                           AndroidDeviceInfo androidInfo =
                               await deviceInfo.androidInfo;
                           if ((androidInfo.version.sdkInt) > 29) {
-                            if (!await Permission.manageExternalStorage
-                                .request()
-                                .isGranted) {
+                            if (!await Permission.storage.request().isGranted) {
                               // ignore: use_build_context_synchronously
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
@@ -169,7 +171,7 @@ class DocumentDetailPhoneView extends ConsumerWidget {
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          "Debe activar los permisos de Storage",
+                                          "Debe activar los permisos de Storagesss",
                                           softWrap: true,
                                         ),
                                       ),
